@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Pencarian Posisi Barang</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Pencarian Posisi Barang')
+@section('content')
 
     {{-- Search Bar --}}
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -98,4 +99,4 @@
             <p class="fw-semibold">Masukkan kata kunci untuk mencari posisi barang di gudang.</p>
         </div>
     @endif
-</x-app-layout>
+@endsection

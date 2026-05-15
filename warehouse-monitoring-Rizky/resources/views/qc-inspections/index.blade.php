@@ -1,7 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        Riwayat Quality Control (QC)
-    </x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Riwayat QC Inspeksi')
+@section('content')
 
     {{-- ── Flash Success ───────────────────────────────────────────────────── --}}
     @if(session('success'))
@@ -143,4 +142,4 @@
         @endif
 
     </div>
-</x-app-layout>
+@endsection

@@ -1,7 +1,7 @@
-<x-app-layout>
-    <x-slot name="header">
-        Detail Barang
-    </x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Detail Barang')
+@section('content')
+
 
     {{-- Back button --}}
     <div class="mb-4">
@@ -148,4 +148,4 @@
         </div>
     </div>
 
-</x-app-layout>
+@endsection

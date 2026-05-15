@@ -1,7 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        Manajemen Sales Order (SO)
-    </x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Buat Sales Order')
+@section('content')
 
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -140,4 +139,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

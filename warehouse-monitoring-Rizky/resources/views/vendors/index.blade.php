@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Master Vendor</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Master Vendor')
+@section('content')
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 d-flex align-items-center gap-2" role="alert">
@@ -76,4 +77,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

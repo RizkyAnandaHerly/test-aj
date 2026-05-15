@@ -1,7 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        Form Quality Control (QC)
-    </x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Form QC Inspeksi')
+@section('content')
 
     <div class="row justify-content-center">
         <div class="col-lg-9">
@@ -324,4 +323,4 @@
     }());
     </script>
 
-</x-app-layout>
+@endsection

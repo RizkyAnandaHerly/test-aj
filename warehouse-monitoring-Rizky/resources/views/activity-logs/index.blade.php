@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Activity Log — Audit Trail</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Activity Log')
+@section('content')
 
     {{-- Filter Bar --}}
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -120,4 +121,4 @@
             </div>
         @endif
     </div>
-</x-app-layout>
+@endsection

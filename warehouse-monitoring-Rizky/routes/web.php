@@ -29,32 +29,88 @@ Route::get('/', function () {
 */
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('requester.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated — Role-Specific Dashboards
+| Authenticated — Role-Specific Dashboards (with real data)
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return '<h1>Admin Dashboard</h1><p>Logged in as: ' . auth()->user()->name . '</p>';
-    })->name('dashboard');
-});
+Route::middleware(['auth', 'role:admin'])
+    ->get('/admin/dashboard', function () {
+        $thisMonth = now()->startOfMonth();
+        $data = [
+            'totalProducts'  => \App\Models\Product::where('status', 'active')->count(),
+            'todayInbound'   => \App\Models\Inbound::whereDate('received_date', today())->count(),
+            'todayQty'       => \App\Models\Inbound::whereDate('received_date', today())->sum('qty'),
+            'pendingQC'      => \App\Models\Inbound::whereDoesntHave('qcInspection')->count(),
+            'lowStock'       => \App\Models\Product::whereColumn('stock_qty', '<=', 'min_stock')
+                                    ->where('status', 'active')->count(),
+            'fullLocations'  => \App\Models\Location::where('status', 'full')->count(),
+            'totalUsers'     => \App\Models\User::count(),
+            'recentInbounds' => \App\Models\Inbound::with('product')
+                                    ->latest()->take(5)->get(),
+            'recentQC'       => \App\Models\QcInspection::with(['product', 'inspector'])
+                                    ->latest()->take(5)->get(),
+            'chartData'      => \App\Models\Inbound::selectRaw('DATE(received_date) as date, SUM(qty) as total')
+                                    ->where('received_date', '>=', now()->subDays(6))
+                                    ->groupBy('date')->orderBy('date')->get(),
+        ];
+        return view('admin.dashboard', $data);
+    })->name('admin.dashboard');
 
-Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
-    Route::get('/dashboard', function () {
-        return '<h1>Manager Dashboard</h1><p>Logged in as: ' . auth()->user()->name . '</p>';
-    })->name('dashboard');
-});
+Route::middleware(['auth', 'role:manager'])
+    ->get('/manager/dashboard', function () {
+        $thisMonth = now()->startOfMonth();
+        $data = [
+            'inboundThisMonth'    => \App\Models\Inbound::where('received_date', '>=', $thisMonth)->count(),
+            'inboundQtyThisMonth' => \App\Models\Inbound::where('received_date', '>=', $thisMonth)->sum('qty'),
+            'qcPass'              => \App\Models\QcInspection::where('created_at', '>=', $thisMonth)
+                                        ->where('status', 'pass')->count(),
+            'qcFail'              => \App\Models\QcInspection::where('created_at', '>=', $thisMonth)
+                                        ->where('status', 'fail')->count(),
+            'qcPartial'           => \App\Models\QcInspection::where('created_at', '>=', $thisMonth)
+                                        ->where('status', 'partial')->count(),
+            'lowStockProducts'    => \App\Models\Product::whereColumn('stock_qty', '<=', 'min_stock')
+                                        ->where('status', 'active')->get(),
+            'locationStats'       => [
+                'available' => \App\Models\Location::where('status', 'available')->count(),
+                'reserved'  => \App\Models\Location::where('status', 'reserved')->count(),
+                'full'      => \App\Models\Location::where('status', 'full')->count(),
+            ],
+            'chartData'           => \App\Models\Inbound::selectRaw('DATE(received_date) as date, SUM(qty) as total')
+                                        ->where('received_date', '>=', now()->subDays(6))
+                                        ->groupBy('date')->orderBy('date')->get(),
+            'topProducts'         => \App\Models\Inbound::with('product')
+                                        ->where('received_date', '>=', $thisMonth)
+                                        ->selectRaw('product_id, SUM(qty) as total_qty')
+                                        ->groupBy('product_id')
+                                        ->orderByDesc('total_qty')
+                                        ->take(5)->get(),
+            'recentQC'            => \App\Models\QcInspection::with(['product', 'inspector'])
+                                        ->latest()->take(5)->get(),
+        ];
+        return view('manager.dashboard', $data);
+    })->name('manager.dashboard');
 
-Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
-    Route::get('/dashboard', function () {
-        return '<h1>Staff Dashboard</h1><p>Logged in as: ' . auth()->user()->name . '</p>';
-    })->name('dashboard');
-});
+Route::middleware(['auth', 'role:staff'])
+    ->get('/staff/dashboard', function () {
+        $data = [
+            'todayInbound'   => \App\Models\Inbound::whereDate('received_date', today())->count(),
+            'todayQty'       => \App\Models\Inbound::whereDate('received_date', today())->sum('qty'),
+            'pendingQC'      => \App\Models\Inbound::whereDoesntHave('qcInspection')->count(),
+            'lowStock'       => \App\Models\Product::whereColumn('stock_qty', '<=', 'min_stock')
+                                    ->where('status', 'active')->count(),
+            'fullLocations'  => \App\Models\Location::where('status', 'full')->count(),
+            'recentInbounds' => \App\Models\Inbound::with(['product', 'vendor'])
+                                    ->latest()->take(5)->get(),
+            'recentQC'       => \App\Models\QcInspection::with(['product', 'inspector'])
+                                    ->latest()->take(5)->get(),
+        ];
+        return view('staff.dashboard', $data);
+    })->name('staff.dashboard');
 
 /*
 |--------------------------------------------------------------------------

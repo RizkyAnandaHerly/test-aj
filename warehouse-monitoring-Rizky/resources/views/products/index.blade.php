@@ -1,7 +1,7 @@
-<x-app-layout>
-    <x-slot name="header">
-        Katalog Barang
-    </x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Katalog Barang')
+@section('content')
+
 
     {{-- ── Search & Filter Bar ─────────────────────────────────────────────── --}}
     <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -197,4 +197,4 @@
 
     </div>
 
-</x-app-layout>
+@endsection

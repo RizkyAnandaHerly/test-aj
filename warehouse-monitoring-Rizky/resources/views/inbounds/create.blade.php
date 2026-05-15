@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Penerimaan Barang (Inbound)</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Input Inbound')
+@section('content')
 
     <div class="row justify-content-center">
         <div class="col-lg-9">
@@ -269,4 +270,4 @@
         });
     }());
     </script>
-</x-app-layout>
+@endsection

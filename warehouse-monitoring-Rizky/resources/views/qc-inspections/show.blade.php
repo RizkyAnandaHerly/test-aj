@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Detail Inspeksi QC</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Detail Inspeksi QC')
+@section('content')
 
     <div class="row justify-content-center">
         <div class="col-lg-9">
@@ -119,4 +120,4 @@
 
         </div>
     </div>
-</x-app-layout>
+@endsection

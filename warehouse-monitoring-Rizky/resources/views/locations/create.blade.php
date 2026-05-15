@@ -1,5 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">Manajemen Tata Letak & Penempatan</x-slot>
+@extends('layouts.sidebar')
+@section('title', 'Alokasi Lokasi Barang')
+@section('content')
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -246,4 +247,4 @@
         });
     }());
     </script>
-</x-app-layout>
+@endsection
