@@ -20,8 +20,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    // If already logged in, redirect to their dashboard
+    if (auth()->check()) {
+        $role = auth()->user()->role?->name;
+        return match($role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'manager' => redirect()->route('manager.dashboard'),
+            'staff'   => redirect()->route('staff.dashboard'),
+            default   => redirect()->route('dashboard'),
+        };
+    }
+    return view('landing');
+})->name('landing');
 
 Route::get('/track', [TrackController::class, 'index'])->name('track');
 
