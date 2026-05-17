@@ -345,12 +345,21 @@
         border: 1px solid #f1f5f9;
       }
       .step-number {
-        font-size: 72px;
+        font-size: 48px;
         font-weight: 900;
-        color: transparent;
-        -webkit-text-stroke: 2px #dbeafe;
+        color: #2563eb;
         line-height: 1;
         margin-bottom: 24px;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .step-number::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background: #e2e8f0;
       }
       .step-content h3 {
         font-size: 22px;
@@ -367,17 +376,10 @@
       /* CTA SECTION */
       #cta {
         position: relative;
-        padding: 120px 60px;
-        background: #2563eb;
+        padding: 140px 60px;
+        background: #1e3a8a;
         overflow: hidden;
         text-align: center;
-      }
-      #cta .bg-pattern {
-        position: absolute;
-        inset: 0;
-        opacity: 0.1;
-        background-image: radial-gradient(#ffffff 2px, transparent 2px);
-        background-size: 40px 40px;
       }
       #cta-content {
         position: relative;
@@ -575,7 +577,11 @@
 
   <!-- SECTION 4: CTA -->
   <section id="cta">
-    <div class="bg-pattern"></div>
+    <video autoplay muted loop playsinline id="cta-video" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.5;">
+      <source src="/videos/section3.mp4" type="video/mp4">
+    </video>
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(30,58,138,0.95) 0%, rgba(37,99,235,0.85) 100%); z-index: 1;"></div>
+    
     <div id="cta-content">
       <h2>Tingkatkan Efisiensi Rantai<br>Pasok Anda Hari Ini.</h2>
       <p>Bergabung dengan WarehouseTrack. Nikmati visibilitas penuh, akurasi stok otomatis, dan keputusan bisnis yang lebih baik.</p>
@@ -628,11 +634,16 @@
       }
     });
 
-    // Hero Video Load (Handles Cache & Fallbacks)
+    // Video Load (Handles Cache & Fallbacks)
     const heroVideo = document.getElementById('hero-video');
     if (heroVideo) {
       heroVideo.load();
       heroVideo.play().catch(() => {});
+    }
+    const ctaVideo = document.getElementById('cta-video');
+    if (ctaVideo) {
+      ctaVideo.load();
+      ctaVideo.play().catch(() => {});
     }
 
     // Tracker Button Logic
