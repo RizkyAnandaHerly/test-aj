@@ -56,6 +56,27 @@
         </div>
         <hr class="text-muted opacity-25">
 
+<hr class="text-muted opacity-25">
+
+        <div class="row mb-3">
+            <div class="col-sm-4 text-muted fw-semibold">Rute Penjualan</div>
+            <div class="col-sm-8 text-dark">
+                <span class="badge bg-secondary px-2 py-1">{{ $salesOrder->origin_country }}</span> 
+                <i class="bi bi-arrow-right mx-2 text-primary"></i> 
+                <span class="badge bg-success px-2 py-1">{{ $salesOrder->destination_country }}</span>
+            </div>
+        </div>
+        <hr class="text-muted opacity-25">
+
+        <div class="row mb-3">
+            <div class="col-sm-4 text-muted fw-semibold">Keterangan Dokumen</div>
+            <div class="col-sm-8 text-dark">
+                <p class="mb-0 bg-light p-3 rounded border text-secondary small" style="white-space: pre-line;">
+                    {{ $salesOrder->description ?? 'Tidak ada keterangan tambahan.' }}
+                </p>
+            </div>
+        </div>
+
         <div class="row mb-3">
             <div class="col-sm-4 text-muted fw-semibold">Tanggal Dibuat</div>
             <div class="col-sm-8 text-dark">{{ $salesOrder->created_at->translatedFormat('l, d F Y H:i') }}</div>

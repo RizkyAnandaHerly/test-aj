@@ -10,9 +10,12 @@ class SalesOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number',
-        'customer_name',
-        'total_amount',
-        'status',
+    'order_number',
+    'customer_name',
+    'total_amount',
+    'status',
+    'description',         
+    'origin_country',      
+    'destination_country', 
     ];
 }
