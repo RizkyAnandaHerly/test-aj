@@ -204,4 +204,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::resource('sales-orders', SalesOrderController::class);
+});
+
 require __DIR__.'/auth.php';

@@ -158,6 +158,13 @@
                     <span class="q-icon">🔬</span> Form QC
                 </a>
             </div>
+            {{-- Modul Sales Order yang sudah diaktifkan --}}
+            <div class="col-6 col-md-3">
+                <a href="{{ route('sales-orders.index') }}" class="quick-btn"
+                   style="background:#e0f2fe;color:#0369a1;">
+                    <span class="q-icon">🛒</span> Sales Order
+                </a>
+            </div>
         </div>
 
         {{-- Row 2: Coming soon --}}
@@ -165,12 +172,12 @@
             Coming Soon
         </p>
         <div class="row g-2">
+            {{-- Sales Order sudah dihapus dari array ini --}}
             @foreach([
                 ['icon'=>'🏭','label'=>'Master Gudang'],
                 ['icon'=>'🚚','label'=>'Master Vendor'],
                 ['icon'=>'🚫','label'=>'Reject & Karantina'],
                 ['icon'=>'📦','label'=>'Packing & Pelabelan'],
-                ['icon'=>'🛒','label'=>'Sales Order'],
                 ['icon'=>'📊','label'=>'Laporan'],
             ] as $btn)
                 <div class="col-6 col-md-2">
