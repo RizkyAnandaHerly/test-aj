@@ -6,6 +6,8 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QcInspectionController;
+use App\Http\Controllers\RejectItemController;
+use App\Http\Controllers\PackingDetailController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\VendorController;
@@ -191,6 +193,16 @@ Route::middleware(['auth'])->group(function () {
 
     // ── Form QC (admin + staff) — now includes show ───────────────────────
     Route::resource('qc-inspections', QcInspectionController::class)->only([
+        'index', 'create', 'store', 'show',
+    ]);
+
+    // ── Reject & Karantina (staff) ────────────────────────────────────────
+    Route::resource('reject-items', RejectItemController::class)->only([
+        'index', 'create', 'store',
+    ]);
+
+    // ── Packing & Pelabelan (staff) ───────────────────────────────────────
+    Route::resource('packing-details', PackingDetailController::class)->only([
         'index', 'create', 'store', 'show',
     ]);
 
