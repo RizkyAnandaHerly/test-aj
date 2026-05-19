@@ -332,13 +332,33 @@
                 ['icon' => '📊', 'name' => 'Stock Opname',        'desc' => 'Penghitungan fisik stok'],
             ] as $module)
                 <div class="col-6 col-md-4 col-lg-2">
-                    <div class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100"
-                         style="background:#f8fafc;border:1px dashed #cbd5e1;opacity:.65;">
-                        <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
-                        <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
-                        <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
-                        <span class="badge rounded-pill" style="background:#e2e8f0;color:#94a3b8;font-size:.6rem;font-weight:700;">Coming Soon</span>
-                    </div>
+                    @if($module['name'] === 'Reject & Karantina')
+                        <a href="{{ route('reject-items.index') }}"
+                           class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100 text-decoration-none text-dark"
+                           style="background:#f8fafc;border:1px dashed #cbd5e1;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
+                        </a>
+                    @elseif($module['name'] === 'Packing & Pelabelan')
+                        <a href="{{ route('packing-details.index') }}"
+                           class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100 text-decoration-none text-dark"
+                           style="background:#f8fafc;border:1px dashed #cbd5e1;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
+                        </a>
+                    @else
+                        <div class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100"
+                             style="background:#f8fafc;border:1px dashed #cbd5e1;opacity:.65;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#e2e8f0;color:#94a3b8;font-size:.6rem;font-weight:700;">Coming Soon</span>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

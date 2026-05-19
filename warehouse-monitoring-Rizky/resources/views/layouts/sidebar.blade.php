@@ -454,11 +454,19 @@
             <div class="sidebar-section-label">Coming Soon</div>
 
             <span class="sidebar-item disabled-item">
+            <a href="{{ route('reject-items.index') }}"
+               class="sidebar-item {{ request()->routeIs('reject-items.*') ? 'active' : '' }}">
                 <i class="bi bi-slash-circle nav-icon"></i> Reject & Karantina
-                <span class="badge-soon">Soon</span>
-            </span>
-            <span class="sidebar-item disabled-item">
+            </a>
+
+            <a href="{{ route('packing-details.index') }}"
+               class="sidebar-item {{ request()->routeIs('packing-details.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
+            </a>
+
+            <div class="sidebar-section-label">Coming Soon</div>
+            <span class="sidebar-item disabled-item">
+                <i class="bi bi-cart-check nav-icon"></i> Sales Order
                 <span class="badge-soon">Soon</span>
             </span>
             {{-- Sales Order sudah dihapus dari sini --}}

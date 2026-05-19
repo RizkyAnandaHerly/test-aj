@@ -88,6 +88,25 @@
                         <div class="text-muted small">{{ $product->unit }}</div>
                     </div>
 
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <div class="text-muted small text-uppercase fw-semibold">Stok Reject</div>
+                                <div class="fs-4 fw-bold text-danger">
+                                    {{ number_format($product->rejectItems()->sum('qty_rejected')) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <div class="text-muted small text-uppercase fw-semibold">Stok Layak</div>
+                                <div class="fs-4 fw-bold {{ $product->isLowStock() ? 'text-danger' : 'text-success' }}">
+                                    {{ $product->stock_qty }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Low stock warning --}}
                     @if($product->isLowStock())
                         <div class="alert alert-warning border-0 rounded-3 d-flex align-items-center gap-2 py-2 px-3 mb-3">
