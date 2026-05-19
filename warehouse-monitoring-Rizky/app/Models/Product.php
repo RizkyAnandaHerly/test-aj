@@ -73,4 +73,12 @@ class Product extends Model
     {
         return $this->hasMany(QcInspection::class);
     }
+
+    /**
+     * A product has many reject/karantina records.
+     */
+    public function rejectItems(): HasMany
+    {
+        return $this->hasMany(RejectItem::class);
+    }
 }
