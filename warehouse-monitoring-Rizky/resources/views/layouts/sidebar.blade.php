@@ -435,14 +435,20 @@
                 <i class="bi bi-box-arrow-in-down nav-icon"></i> Input Inbound
             </a>
 
-            <a href="{{ route('locations.create') }}"
+            <a href="{{ route('locations.index') }}"
                class="sidebar-item {{ request()->routeIs('locations.*') ? 'active' : '' }}">
                 <i class="bi bi-geo-alt nav-icon"></i> Penempatan Lokasi
             </a>
 
-            <a href="{{ route('qc-inspections.create') }}"
+            <a href="{{ route('qc-inspections.index') }}"
                class="sidebar-item {{ request()->routeIs('qc-inspections.*') ? 'active' : '' }}">
                 <i class="bi bi-shield-check nav-icon"></i> Form QC
+            </a>
+
+            {{-- Menu Sales Order yang sudah diaktifkan --}}
+            <a href="{{ route('sales-orders.index') }}"
+               class="sidebar-item {{ request()->routeIs('sales-orders.*') ? 'active' : '' }}">
+                <i class="bi bi-cart-check nav-icon"></i> Sales Order
             </a>
 
             <div class="sidebar-section-label">Coming Soon</div>
@@ -455,10 +461,7 @@
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
                 <span class="badge-soon">Soon</span>
             </span>
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-cart-check nav-icon"></i> Sales Order
-                <span class="badge-soon">Soon</span>
-            </span>
+            {{-- Sales Order sudah dihapus dari sini --}}
             <span class="sidebar-item disabled-item">
                 <i class="bi bi-send nav-icon"></i> Dokumen Pengiriman
                 <span class="badge-soon">Soon</span>
