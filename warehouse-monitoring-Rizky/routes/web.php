@@ -216,8 +216,37 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
+
+    // ── Katalog Barang — semua role dapat melihat ─────────────────────────
+    Route::resource('products', ProductController::class)->only(['index', 'show']);
+
+    // ── Form Inbound (admin + staff) ──────────────────────────────────────
+    Route::resource('inbounds', InboundController::class)->only(['create', 'store']);
+
+    // ── Penempatan Lokasi (admin + staff) ─────────────────────────────────
+    Route::resource('locations', LocationController::class)->only([
+        'index', 'create', 'store',
+    ]);
+    // Delete placement — uses ProductLocation model binding
+    Route::delete('/locations/placement/{productLocation}', [LocationController::class, 'destroy'])
+         ->name('locations.placement.destroy');
+
+    // ── Form QC (admin + staff) — now includes show ───────────────────────
+    Route::resource('qc-inspections', QcInspectionController::class)->only([
+        'index', 'create', 'store', 'show',
+    ]);
+
+    // ── Sales Order (admin + staff) ───────────────────────────────────────
+    // Menggunakan 'sales-orders' (jamak) agar sesuai dengan penamaan di Blade
+    // Dan membuka seluruh akses resource (index, create, store, edit, update, show, destroy)
     Route::resource('sales-orders', SalesOrderController::class);
+
+    // ── Pencarian Posisi Barang (admin + manager + staff) — Fix 404 ───────
+    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+
+    // ── Activity Log (admin + manager) ────────────────────────────────────
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
 require __DIR__.'/auth.php';

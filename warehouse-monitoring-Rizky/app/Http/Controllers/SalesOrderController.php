@@ -27,6 +27,9 @@ class SalesOrderController extends Controller
             'customer_name' => 'required|string|max:255',
             'total_amount' => 'required|numeric|min:0',
             'status' => 'required|in:pending,processing,completed,cancelled',
+            'description' => 'nullable|string',
+            'origin_country' => 'required|string|max:100',
+            'destination_country' => 'required|string|max:100',
         ]);
 
         SalesOrder::create($request->all());
@@ -53,6 +56,9 @@ class SalesOrderController extends Controller
             'customer_name' => 'required|string|max:255',
             'total_amount' => 'required|numeric|min:0',
             'status' => 'required|in:pending,processing,completed,cancelled',
+            'description' => 'nullable|string',
+            'origin_country' => 'required|string|max:100',
+            'destination_country' => 'required|string|max:100',
         ]);
 
         $salesOrder->update($request->all());

@@ -51,6 +51,31 @@
                 @enderror
             </div>
 
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="origin_country" class="form-label fw-semibold">Asal Negara <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('origin_country') is-invalid @enderror" id="origin_country" name="origin_country" value="{{ old('origin_country') }}" required placeholder="Contoh: Jepang">
+                    @error('origin_country')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="destination_country" class="form-label fw-semibold">Tujuan Negara <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('destination_country') is-invalid @enderror" id="destination_country" name="destination_country" value="{{ old('destination_country') }}" required placeholder="Contoh: Indonesia">
+                    @error('destination_country')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+<div class="mb-4">
+    <label for="description" class="form-label fw-semibold">Keterangan Dokumen / Catatan</label>
+    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" placeholder="Masukkan detail informasi atau instruksi khusus dokumen..."></textarea>
+    @error('description')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('sales-orders.index') }}" class="btn btn-light border">Batal</a>
                 <button type="submit" class="btn btn-primary">Simpan Pesanan</button>
