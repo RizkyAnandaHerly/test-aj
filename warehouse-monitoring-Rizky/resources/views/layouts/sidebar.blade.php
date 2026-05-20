@@ -445,6 +445,11 @@
                 <i class="bi bi-shield-check nav-icon"></i> Form QC
             </a>
 
+            <a href="{{ route('certifications.index') }}"
+               class="sidebar-item {{ request()->routeIs('certifications.*') ? 'active' : '' }}">
+                <i class="bi bi-award nav-icon"></i> Sertifikasi
+            </a>
+
             <a href="{{ route('reject-items.index') }}"
                class="sidebar-item {{ request()->routeIs('reject-items.*') ? 'active' : '' }}">
                 <i class="bi bi-slash-circle nav-icon"></i> Reject & Karantina

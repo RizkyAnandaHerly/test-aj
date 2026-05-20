@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QcInspectionController;
 use App\Http\Controllers\RejectItemController;
+use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\PackingDetailController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SearchController;
@@ -193,6 +194,11 @@ Route::middleware(['auth'])->group(function () {
 
     // ── Form QC (admin + staff) — now includes show ───────────────────────
     Route::resource('qc-inspections', QcInspectionController::class)->only([
+        'index', 'create', 'store', 'show',
+    ]);
+
+    // ── Sertifikasi Dokumen (staff) — dokumen ekspor & traceability
+    Route::resource('certifications', CertificationController::class)->only([
         'index', 'create', 'store', 'show',
     ]);
 
