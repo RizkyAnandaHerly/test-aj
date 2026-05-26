@@ -11,9 +11,12 @@ use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\PackingDetailController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ShippingDocumentController;
+use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\TrackController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // If already logged in, redirect to their dashboard
-    if (auth()->check()) {
-        $role = auth()->user()->role?->name;
+    if (Auth::check()) {
+        $role = Auth::user()->role?->name;
         return match($role) {
             'admin'   => redirect()->route('admin.dashboard'),
             'manager' => redirect()->route('manager.dashboard'),
@@ -214,6 +217,55 @@ Route::middleware(['auth'])->group(function () {
 
     // ── Sales Order ───────────────────────────────────────────────────────
     Route::resource('sales-order', SalesOrderController::class)->only(['create', 'store']);
+
+    // ── Pencarian Posisi Barang (admin + manager + staff) — Fix 404 ───────
+    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+
+    // ── Activity Log (admin + manager) ────────────────────────────────────
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});
+
+Route::middleware(['auth'])->group(function () {
+
+    // ── Katalog Barang — semua role dapat melihat ─────────────────────────
+    Route::resource('products', ProductController::class)->only(['index', 'show']);
+
+    // ── Form Inbound (admin + staff) ──────────────────────────────────────
+    Route::resource('inbounds', InboundController::class)->only(['create', 'store']);
+
+    // ── Penempatan Lokasi (admin + staff) ─────────────────────────────────
+    Route::resource('locations', LocationController::class)->only([
+        'index', 'create', 'store',
+    ]);
+    // Delete placement — uses ProductLocation model binding
+    Route::delete('/locations/placement/{productLocation}', [LocationController::class, 'destroy'])
+         ->name('locations.placement.destroy');
+
+    // ── Form QC (admin + staff) — now includes show ───────────────────────
+    Route::resource('qc-inspections', QcInspectionController::class)->only([
+        'index', 'create', 'store', 'show',
+    ]);
+
+    // ── Sales Order (admin + staff) ───────────────────────────────────────
+    // Menggunakan 'sales-orders' (jamak) agar sesuai dengan penamaan di Blade
+    // Dan membuka seluruh akses resource (index, create, store, edit, update, show, destroy)
+    Route::resource('sales-orders', SalesOrderController::class);
+
+    // ── Dokumen Pengiriman (staff) — Surat Jalan, COO, POB ────────────────
+    Route::resource('shipping-documents', ShippingDocumentController::class);
+
+    // ── Stock Opname (staff) — Perhitungan Fisik ──────────────────────────
+    Route::resource('stock-opnames', StockOpnameController::class);
+    Route::post('/stock-opnames/{stockOpname}/update-detail', [StockOpnameController::class, 'updateDetail'])
+         ->name('stock-opnames.update-detail');
+    Route::post('/stock-opnames/{stockOpname}/apply', [StockOpnameController::class, 'apply'])
+         ->name('stock-opnames.apply');
+    Route::post('/stock-opnames/{stockOpname}/cancel', [StockOpnameController::class, 'cancel'])
+         ->name('stock-opnames.cancel');
+
+    // ── Pencarian Lokasi Barang (staff) — Advanced Search ──────────────────
+    Route::get('/search/location-advanced', [SearchController::class, 'locationAdvanced'])
+         ->name('search.location-advanced');
 
     // ── Pencarian Posisi Barang (admin + manager + staff) — Fix 404 ───────
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
