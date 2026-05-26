@@ -350,6 +350,33 @@
                             <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
                             <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
                         </a>
+                    @elseif($module['name'] === 'Sales Order')
+                        <a href="{{ route('sales-orders.index') }}"
+                           class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100 text-decoration-none text-dark"
+                           style="background:#f8fafc;border:1px dashed #cbd5e1;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
+                        </a>
+                    @elseif($module['name'] === 'Dokumen Pengiriman')
+                        <a href="{{ route('shipping-documents.index') }}"
+                           class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100 text-decoration-none text-dark"
+                           style="background:#f8fafc;border:1px dashed #cbd5e1;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
+                        </a>
+                    @elseif($module['name'] === 'Stock Opname')
+                        <a href="{{ route('stock-opnames.index') }}"
+                           class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100 text-decoration-none text-dark"
+                           style="background:#f8fafc;border:1px dashed #cbd5e1;">
+                            <div style="font-size:1.5rem;margin-bottom:6px;">{{ $module['icon'] }}</div>
+                            <div class="fw-semibold text-dark" style="font-size:.75rem;margin-bottom:4px;">{{ $module['name'] }}</div>
+                            <div class="text-muted" style="font-size:.65rem;margin-bottom:6px;">{{ $module['desc'] }}</div>
+                            <span class="badge rounded-pill" style="background:#d1fae5;color:#166534;font-size:.6rem;font-weight:700;">Buka</span>
+                        </a>
                     @else
                         <div class="d-flex flex-column align-items-center justify-content-center text-center p-3 rounded-3 h-100"
                              style="background:#f8fafc;border:1px dashed #cbd5e1;opacity:.65;">

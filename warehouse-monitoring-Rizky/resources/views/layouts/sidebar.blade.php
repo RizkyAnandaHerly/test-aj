@@ -451,9 +451,25 @@
                 <i class="bi bi-cart-check nav-icon"></i> Sales Order
             </a>
 
-            <div class="sidebar-section-label">Coming Soon</div>
+            <div class="sidebar-section-label">Gudang</div>
 
-            <span class="sidebar-item disabled-item">
+            <a href="{{ route('shipping-documents.index') }}"
+               class="sidebar-item {{ request()->routeIs('shipping-documents.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text nav-icon"></i> Dokumen Pengiriman
+            </a>
+
+            <a href="{{ route('stock-opnames.index') }}"
+               class="sidebar-item {{ request()->routeIs('stock-opnames.*') ? 'active' : '' }}">
+                <i class="bi bi-calculator nav-icon"></i> Stock Opname
+            </a>
+
+            <a href="{{ route('search.location-advanced') }}"
+               class="sidebar-item {{ request()->routeIs('search.location-advanced') ? 'active' : '' }}">
+                <i class="bi bi-search nav-icon"></i> Pencarian Lokasi (Picking)
+            </a>
+
+            <div class="sidebar-section-label">Lainnya</div>
+
             <a href="{{ route('reject-items.index') }}"
                class="sidebar-item {{ request()->routeIs('reject-items.*') ? 'active' : '' }}">
                 <i class="bi bi-slash-circle nav-icon"></i> Reject & Karantina
@@ -463,21 +479,6 @@
                class="sidebar-item {{ request()->routeIs('packing-details.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
             </a>
-
-            <div class="sidebar-section-label">Coming Soon</div>
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-cart-check nav-icon"></i> Sales Order
-                <span class="badge-soon">Soon</span>
-            </span>
-            {{-- Sales Order sudah dihapus dari sini --}}
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-send nav-icon"></i> Dokumen Pengiriman
-                <span class="badge-soon">Soon</span>
-            </span>
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-clipboard-data nav-icon"></i> Stock Opname
-                <span class="badge-soon">Soon</span>
-            </span>
 
         {{-- ────────────────────── REQUESTER / DEFAULT ────────────────────── --}}
         @else
