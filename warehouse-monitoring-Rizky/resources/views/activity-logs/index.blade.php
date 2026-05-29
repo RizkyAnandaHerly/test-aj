@@ -59,7 +59,14 @@
                 <h5 class="fw-bold mb-0 text-dark">Log Perubahan Data</h5>
                 <p class="text-muted small mb-0">Seluruh operasi create / update / delete tercatat di sini</p>
             </div>
-            <span class="badge bg-secondary rounded-pill">{{ $logs->total() }} entri</span>
+            
+            {{-- Bagian ini yang ditambahkan: Membungkus tombol Export dan Badge dalam satu flexbox --}}
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ route('reports.movements.export') }}" class="btn btn-success btn-sm fw-semibold shadow-sm d-flex align-items-center gap-1">
+                    <i class="bi bi-file-earmark-excel"></i> Export Excel
+                </a>
+                <span class="badge bg-secondary rounded-pill">{{ $logs->total() }} entri</span>
+            </div>
         </div>
 
         <div class="card-body p-0">
