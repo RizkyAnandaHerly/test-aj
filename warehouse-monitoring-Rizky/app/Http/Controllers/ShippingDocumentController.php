@@ -44,8 +44,8 @@ class ShippingDocumentController extends Controller
     public function create()
     {
         $salesOrders = SalesOrder::where('status', 'active')
-                                ->orderBy('so_number', 'desc')
-                                ->get(['id', 'so_number', 'customer_name']);
+                                ->orderBy('order_number', 'desc')
+                                ->get(['id', 'order_number', 'customer_name']);
 
         return view('shipping-documents.create', compact('salesOrders'));
     }
@@ -83,8 +83,8 @@ class ShippingDocumentController extends Controller
     public function edit(ShippingDocument $shippingDocument)
     {
         $salesOrders = SalesOrder::where('status', 'active')
-                                ->orderBy('so_number', 'desc')
-                                ->get(['id', 'so_number', 'customer_name']);
+                                ->orderBy('order_number', 'desc')
+                                ->get(['id', 'order_number', 'customer_name']);
 
         return view('shipping-documents.edit', compact('shippingDocument', 'salesOrders'));
     }
