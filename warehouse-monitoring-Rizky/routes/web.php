@@ -16,6 +16,7 @@ use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\TrackController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -272,6 +273,11 @@ Route::middleware(['auth'])->group(function () {
 
     // ── Activity Log (admin + manager) ────────────────────────────────────
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reports/movements/export', [ReportController::class, 'exportExcel'])
+        ->name('reports.movements.export');
 });
 
 require __DIR__.'/auth.php';
