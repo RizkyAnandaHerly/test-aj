@@ -7,12 +7,17 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QcInspectionController;
 use App\Http\Controllers\RejectItemController;
+use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\PackingDetailController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ShippingDocumentController;
+use App\Http\Controllers\StockOpnameController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\TrackController;
+use App\Http\Controllers\ReportController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,8 +28,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // If already logged in, redirect to their dashboard
-    if (auth()->check()) {
-        $role = auth()->user()->role?->name;
+    if (Auth::check()) {
+        $role = Auth::user()->role?->name;
         return match($role) {
             'admin'   => redirect()->route('admin.dashboard'),
             'manager' => redirect()->route('manager.dashboard'),
@@ -196,6 +201,11 @@ Route::middleware(['auth'])->group(function () {
         'index', 'create', 'store', 'show',
     ]);
 
+    // ── Sertifikasi Dokumen (staff) — dokumen ekspor & traceability
+    Route::resource('certifications', CertificationController::class)->only([
+        'index', 'create', 'store', 'show',
+    ]);
+
     // ── Reject & Karantina (staff) ────────────────────────────────────────
     Route::resource('reject-items', RejectItemController::class)->only([
         'index', 'create', 'store',
@@ -242,11 +252,32 @@ Route::middleware(['auth'])->group(function () {
     // Dan membuka seluruh akses resource (index, create, store, edit, update, show, destroy)
     Route::resource('sales-orders', SalesOrderController::class);
 
+    // ── Dokumen Pengiriman (staff) — Surat Jalan, COO, POB ────────────────
+    Route::resource('shipping-documents', ShippingDocumentController::class);
+
+    // ── Stock Opname (staff) — Perhitungan Fisik ──────────────────────────
+    Route::resource('stock-opnames', StockOpnameController::class);
+    Route::post('/stock-opnames/{stockOpname}/update-detail', [StockOpnameController::class, 'updateDetail'])
+         ->name('stock-opnames.update-detail');
+    Route::post('/stock-opnames/{stockOpname}/apply', [StockOpnameController::class, 'apply'])
+         ->name('stock-opnames.apply');
+    Route::post('/stock-opnames/{stockOpname}/cancel', [StockOpnameController::class, 'cancel'])
+         ->name('stock-opnames.cancel');
+
+    // ── Pencarian Lokasi Barang (staff) — Advanced Search ──────────────────
+    Route::get('/search/location-advanced', [SearchController::class, 'locationAdvanced'])
+         ->name('search.location-advanced');
+
     // ── Pencarian Posisi Barang (admin + manager + staff) — Fix 404 ───────
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
     // ── Activity Log (admin + manager) ────────────────────────────────────
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reports/movements/export', [ReportController::class, 'exportExcel'])
+        ->name('reports.movements.export');
 });
 
 require __DIR__.'/auth.php';
