@@ -167,27 +167,43 @@
             </div>
         </div>
 
-        {{-- Row 2: Coming soon --}}
+        {{-- Row 2: Additional modules --}}
         <p class="text-muted" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">
-            Coming Soon
+            Modul Tambahan
         </p>
         <div class="row g-2">
-            {{-- Sales Order sudah dihapus dari array ini --}}
-            @foreach([
-                ['icon'=>'🏭','label'=>'Master Gudang'],
-                ['icon'=>'🚚','label'=>'Master Vendor'],
-                ['icon'=>'🚫','label'=>'Reject & Karantina'],
-                ['icon'=>'📦','label'=>'Packing & Pelabelan'],
-                ['icon'=>'📊','label'=>'Laporan'],
-            ] as $btn)
-                <div class="col-6 col-md-2">
-                    <div class="quick-btn"
-                         style="background:#f8fafc;color:#94a3b8;border:1px dashed #cbd5e1;opacity:.7;cursor:not-allowed;">
-                        <span class="q-icon">{{ $btn['icon'] }}</span>
-                        {{ $btn['label'] }}
-                    </div>
+            {{-- Semua modul yang sudah ada backend-nya --}}
+            <div class="col-6 col-md-2">
+                <a href="{{ route('warehouses.index') }}" class="quick-btn"
+                   style="background:#fef08a;color:#854d0e;">
+                    <span class="q-icon">🏭</span> Master Gudang
+                </a>
+            </div>
+            <div class="col-6 col-md-2">
+                <a href="{{ route('vendors.index') }}" class="quick-btn"
+                   style="background:#fec2d4;color:#9f1239;">
+                    <span class="q-icon">🚚</span> Master Vendor
+                </a>
+            </div>
+            <div class="col-6 col-md-2">
+                <a href="{{ route('reject-items.index') }}" class="quick-btn"
+                   style="background:#fed7aa;color:#92400e;">
+                    <span class="q-icon">🚫</span> Reject & Karantina
+                </a>
+            </div>
+            <div class="col-6 col-md-2">
+                <a href="{{ route('packing-details.index') }}" class="quick-btn"
+                   style="background:#d1d5db;color:#374151;">
+                    <span class="q-icon">📦</span> Packing & Pelabelan
+                </a>
+            </div>
+            {{-- Laporan masih Coming Soon karena tidak ada route --}}
+            <div class="col-6 col-md-2">
+                <div class="quick-btn"
+                     style="background:#f8fafc;color:#94a3b8;border:1px dashed #cbd5e1;opacity:.7;cursor:not-allowed;">
+                    <span class="q-icon">📊</span> Laporan
                 </div>
-            @endforeach
+            </div>
         </div>
     </div>
 </div>

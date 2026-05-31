@@ -445,15 +445,6 @@
                 <i class="bi bi-shield-check nav-icon"></i> Form QC
             </a>
 
-            {{-- Menu Sales Order yang sudah diaktifkan --}}
-            <a href="{{ route('sales-orders.index') }}"
-               class="sidebar-item {{ request()->routeIs('sales-orders.*') ? 'active' : '' }}">
-                <i class="bi bi-cart-check nav-icon"></i> Sales Order
-            </a>
-
-            <div class="sidebar-section-label">Coming Soon</div>
-
-            <span class="sidebar-item disabled-item">
             <a href="{{ route('reject-items.index') }}"
                class="sidebar-item {{ request()->routeIs('reject-items.*') ? 'active' : '' }}">
                 <i class="bi bi-slash-circle nav-icon"></i> Reject & Karantina
@@ -463,21 +454,6 @@
                class="sidebar-item {{ request()->routeIs('packing-details.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
             </a>
-
-            <div class="sidebar-section-label">Coming Soon</div>
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-cart-check nav-icon"></i> Sales Order
-                <span class="badge-soon">Soon</span>
-            </span>
-            {{-- Sales Order sudah dihapus dari sini --}}
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-send nav-icon"></i> Dokumen Pengiriman
-                <span class="badge-soon">Soon</span>
-            </span>
-            <span class="sidebar-item disabled-item">
-                <i class="bi bi-clipboard-data nav-icon"></i> Stock Opname
-                <span class="badge-soon">Soon</span>
-            </span>
 
         {{-- ────────────────────── REQUESTER / DEFAULT ────────────────────── --}}
         @else
