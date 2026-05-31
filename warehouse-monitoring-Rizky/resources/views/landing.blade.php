@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <!-- GSAP + ScrollTrigger via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -452,19 +453,7 @@
   <!-- NAVBAR -->
   <nav id="navbar">
     <a href="/" class="nav-brand">
-      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" stroke="currentColor"></rect>
-        <path d="M9 22v-4h6v4" stroke="currentColor"></path>
-        <path d="M8 6h.01" stroke="currentColor"></path>
-        <path d="M16 6h.01" stroke="currentColor"></path>
-        <path d="M12 6h.01" stroke="currentColor"></path>
-        <path d="M12 10h.01" stroke="currentColor"></path>
-        <path d="M12 14h.01" stroke="currentColor"></path>
-        <path d="M16 10h.01" stroke="currentColor"></path>
-        <path d="M16 14h.01" stroke="currentColor"></path>
-        <path d="M8 10h.01" stroke="currentColor"></path>
-        <path d="M8 14h.01" stroke="currentColor"></path>
-      </svg>
+      <i class="bi bi-buildings-fill fs-3 text-primary me-2"></i>
       WarehouseTrack
     </a>
     <div class="nav-links">
