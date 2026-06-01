@@ -56,7 +56,7 @@ class LocationController extends Controller
         $validator = Validator::make($request->all(), [
             'product_id'  => ['required', 'integer', 'exists:products,id'],
             'location_id' => ['required', 'integer', 'exists:locations,id'],
-            'qty_stored'  => ['required', 'integer', 'min:1'],
+            'qty_stored'  => ['required', 'integer', 'min:1', 'max:200'],
         ]);
 
         if ($validator->fails()) {

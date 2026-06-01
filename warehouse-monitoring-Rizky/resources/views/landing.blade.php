@@ -639,7 +639,7 @@
     function goToTrack() {
       const input = document.getElementById('track-input').value;
       if (input) {
-        window.location.href = "{{ route('track') }}?search=" + encodeURIComponent(input);
+        window.location.href = "{{ route('track') }}?order_id=" + encodeURIComponent(input);
       } else {
         window.location.href = "{{ route('track') }}";
       }
