@@ -45,7 +45,7 @@ class InboundController extends Controller
         // ── 1. Validate ───────────────────────────────────────────────────────
         $validator = Validator::make($request->all(), [
             'product_id'    => ['required', 'integer', 'exists:products,id'],
-            'qty'           => ['required', 'integer', 'min:1'],
+            'qty'           => ['required', 'integer', 'min:1', 'max:1000000000'],
             'vendor_id'     => ['nullable', 'integer', 'exists:vendors,id'],
             'batch_no'      => ['nullable', 'string', 'max:255'],
             'received_date' => ['required', 'date'],
