@@ -56,7 +56,7 @@
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <p class="text-muted small mb-1">Sales Order</p>
-                            <p class="fw-semibold text-dark">{{ $shippingDocument->salesOrder->so_number ?? '-' }}</p>
+                            <p class="fw-semibold text-dark">{{ $shippingDocument->salesOrder->order_number ?? '-' }}</p>
                         </div>
                         <div class="col-md-6">
                             <p class="text-muted small mb-1">Dibuat Oleh</p>

@@ -120,7 +120,7 @@ class StockOpnameController extends Controller
         $productLocation = ProductLocation::findOrFail($validated['product_location_id']);
 
         // Hitung perbedaan
-        $system_qty = $productLocation->qty;
+        $system_qty = $productLocation->qty_stored;
         $physical_qty = $validated['physical_qty'];
         $difference = $physical_qty - $system_qty;
 
