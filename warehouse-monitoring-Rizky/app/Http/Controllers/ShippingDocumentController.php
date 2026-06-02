@@ -43,7 +43,7 @@ class ShippingDocumentController extends Controller
      */
     public function create()
     {
-        $salesOrders = SalesOrder::where('status', 'active')
+        $salesOrders = SalesOrder::where('status', 'processing')
                                 ->orderBy('order_number', 'desc')
                                 ->get(['id', 'order_number', 'customer_name']);
 
@@ -82,7 +82,7 @@ class ShippingDocumentController extends Controller
      */
     public function edit(ShippingDocument $shippingDocument)
     {
-        $salesOrders = SalesOrder::where('status', 'active')
+        $salesOrders = SalesOrder::where('status', 'processing')
                                 ->orderBy('order_number', 'desc')
                                 ->get(['id', 'order_number', 'customer_name']);
 

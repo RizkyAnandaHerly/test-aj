@@ -59,7 +59,7 @@
                                             @break
                                     @endswitch
                                 </td>
-                                <td>{{ $doc->salesOrder->so_number ?? '-' }}</td>
+                                <td>{{ $doc->salesOrder->order_number ?? '-' }}</td>
                                 <td>{{ $doc->issued_date->format('d M Y') }}</td>
                                 <td>
                                     @switch($doc->status)

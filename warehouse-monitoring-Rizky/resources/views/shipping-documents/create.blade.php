@@ -45,7 +45,7 @@
                                 <option value="" selected disabled>-- Pilih Sales Order --</option>
                                 @foreach($salesOrders as $so)
                                     <option value="{{ $so->id }}" {{ old('sales_order_id') == $so->id ? 'selected' : '' }}>
-                                        {{ $so->so_number }} — {{ $so->customer_name }}
+                                        {{ $so->order_number }} — {{ $so->customer_name }}
                                     </option>
                                 @endforeach
                             </select>
