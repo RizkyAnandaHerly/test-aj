@@ -10,13 +10,17 @@ class TrackController extends Controller
     public function index(Request $request)
     {
         // Mendapatkan input pencarian (misal dari form <input name="order_id">)
-        $orderId = $request->query('order_id');
+        $orderId = $request->query('search') ?? $request->query('order_id');
         
         $salesOrder = null;
         if ($orderId) {
-            // Mencari Sales Order berdasarkan nomor SO
             $salesOrder = SalesOrder::where('order_number', $orderId)->first();
         }
+
+        return view('track.result', [
+            'orderId'    => $orderId,
+            'salesOrder' => $salesOrder
+        ]);
 
         // Kirim data SO ke view
         return view('track.result', [
