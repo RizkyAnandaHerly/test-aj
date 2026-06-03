@@ -139,6 +139,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="location_id" id="location_id" value="{{ old('location_id') }}">
+
                         {{-- Capacity hint --}}
                         <div id="capacity-info" class="mb-4 rounded-3 px-3 py-2 small fw-semibold" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0;">
                             <span id="capacity-text"></span>
@@ -175,6 +177,7 @@
         const rackSel      = document.getElementById('rack_sel');
         const palletSel    = document.getElementById('pallet_sel');
         const palletWrap   = document.getElementById('pallet_wrap');
+        const locationId   = document.getElementById('location_id');
         const capInfo      = document.getElementById('capacity-info');
         const capText      = document.getElementById('capacity-text');
 
@@ -200,6 +203,7 @@
             resetSelect(palletSel, '-- Tanpa Palet --');
             palletWrap.style.display = 'none';
             capInfo.style.display    = 'none';
+            locationId.value         = '';
 
             if (!this.value) return;
 
@@ -243,6 +247,7 @@
             resetSelect(palletSel, '-- Tanpa Palet --');
             palletWrap.style.display = 'none';
             capInfo.style.display    = 'none';
+            locationId.value         = this.value;
 
             if (!this.value) return;
 
@@ -255,6 +260,7 @@
             const whId = warehouseSel.value;
             const zone = zoneSel.value;
             const rack = opt.textContent.split(' ')[0]; // Extract rack_code
+            locationId.value = this.value;
             const res  = await fetch(`/api/locations/pallets?warehouse_id=${whId}&zone=${zone}&rack=${rack}`);
             const pallets = await res.json();
 
@@ -267,6 +273,10 @@
                 });
                 palletWrap.style.display = 'block';
             }
+        });
+
+        palletSel.addEventListener('change', function () {
+            locationId.value = this.value || rackSel.value || '';
         });
     }());
     </script>
