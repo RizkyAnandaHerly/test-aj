@@ -3,26 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Inbound;
+use App\Models\SalesOrder; // Pastikan memanggil model SalesOrder, bukan Inbound lagi
 
 class TrackController extends Controller
 {
     public function index(Request $request)
     {
+        // Mendapatkan input pencarian (misal dari form <input name="order_id">)
         $orderId = $request->query('order_id');
         
-        $inbound = null;
+        $salesOrder = null;
         if ($orderId) {
-            // Karena kita belum memiliki tabel Ekspor/Sales Order, 
-            // kita gunakan Inbound batch_no sebagai Nomor Resi untuk didemonstrasikan
-            $inbound = Inbound::with(['product', 'vendor', 'qcInspection', 'receiver'])
-                ->where('batch_no', $orderId)
-                ->first();
+            // Mencari Sales Order berdasarkan nomor SO
+            $salesOrder = SalesOrder::where('order_number', $orderId)->first();
         }
 
+        // Kirim data SO ke view
         return view('track.result', [
-            'orderId' => $orderId,
-            'inbound' => $inbound
+            'orderId'    => $orderId,
+            'salesOrder' => $salesOrder // Variabel diubah dari 'inbound' menjadi 'salesOrder'
         ]);
     }
 }
