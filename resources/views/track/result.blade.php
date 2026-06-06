@@ -42,7 +42,6 @@
     </style>
 </head>
 <body>
-    <!-- Navbar Minimalis -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
         <div class="container">
             <a class="navbar-brand fw-bold fs-4 d-flex align-items-center text-dark" href="/">
@@ -59,102 +58,106 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 
-                <form action="/track" method="GET" class="mb-5">
-                    <div class="input-group input-group-lg border rounded-pill overflow-hidden bg-white shadow-sm">
-                        <span class="input-group-text bg-transparent border-0 ps-4">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" name="order_id" class="form-control border-0 bg-transparent" placeholder="Masukkan Batch No / Order ID..." value="{{ $orderId }}" style="box-shadow: none;" required>
-                        <button class="btn btn-primary px-5 fw-bold" type="submit">Lacak Baru</button>
-                    </div>
-                </form>
+                @if(!$salesOrder)
+                    <form action="/track" method="GET" class="mb-5">
+                        <div class="input-group input-group-lg border rounded-pill overflow-hidden bg-white shadow-sm">
+                            <span class="input-group-text bg-transparent border-0 ps-4">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" name="search" class="form-control border-0 bg-transparent" placeholder="Masukkan Nomor Sales Order..." value="{{ $orderId }}" style="box-shadow: none;" required>
+                            <button class="btn btn-primary px-5 fw-bold" type="submit">Lacak Baru</button>
+                        </div>
+                    </form>
+                @endif
 
-                @if($orderId && !$inbound)
+                @if($orderId && !$salesOrder)
                     <div class="alert alert-danger rounded-4 p-4 text-center shadow-sm">
                         <i class="bi bi-exclamation-triangle-fill fs-1 text-danger mb-3 d-block"></i>
                         <h4 class="fw-bold">Data Tidak Ditemukan</h4>
-                        <p class="mb-0">Maaf, kami tidak dapat menemukan data pengiriman untuk nomor resi/batch <strong>{{ $orderId }}</strong>. Pastikan nomor yang Anda masukkan benar.</p>
+                        <p class="mb-0">Maaf, kami tidak dapat menemukan data pesanan untuk nomor <strong>{{ $orderId }}</strong>. Pastikan nomor yang Anda masukkan benar.</p>
                     </div>
-                @elseif($inbound)
+                @elseif($salesOrder)
                     <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
                         <div class="card-header bg-primary text-white p-4 border-0">
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                                 <div>
-                                    <p class="text-white-50 text-uppercase small fw-bold mb-1">Nomor Pelacakan</p>
-                                    <h4 class="mb-0 fw-bold">{{ $inbound->batch_no }}</h4>
+                                    <p class="text-white-50 text-uppercase small fw-bold mb-1">Nomor Pelacakan SO</p>
+                                    <h4 class="mb-0 fw-bold">{{ $salesOrder->order_number }}</h4>
                                 </div>
                                 <div class="text-end">
                                     <span class="badge bg-white text-primary px-3 py-2 rounded-pill fs-6 mb-1 shadow-sm">
-                                        <i class="bi bi-box-seam me-2"></i>{{ $inbound->qcInspection ? 'Selesai QC' : 'Baru Diterima' }}
+                                        <i class="bi bi-box-seam me-2"></i>{{ $salesOrder->status }}
                                     </span>
-                                    <p class="mb-0 text-white-50 small">Pemasok: {{ $inbound->vendor->name ?? 'Internal' }}</p>
+                                    <p class="mb-0 text-white-50 small">Pelanggan: {{ $salesOrder->customer_name ?? '-' }}</p>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="card-body p-4 p-md-5 bg-white">
-                            <!-- Informasi Produk -->
                             <div class="row mb-5 pb-4 border-bottom g-4">
                                 <div class="col-md-4">
-                                    <p class="text-muted small fw-bold text-uppercase mb-1">Nama Produk (Kopi)</p>
-                                    <h6 class="fw-bold">{{ $inbound->product->name }}</h6>
+                                    <p class="text-muted small fw-bold text-uppercase mb-1">Rute Pengiriman</p>
+                                    <h6 class="fw-bold">
+                                        {{ $salesOrder->origin_country }} <i class="bi bi-arrow-right mx-1 text-primary"></i> {{ $salesOrder->destination_country }}
+                                    </h6>
                                 </div>
                                 <div class="col-md-4 border-start-md ps-md-4">
-                                    <p class="text-muted small fw-bold text-uppercase mb-1">SKU</p>
-                                    <h6 class="fw-bold">{{ $inbound->product->sku }}</h6>
+                                    <p class="text-muted small fw-bold text-uppercase mb-1">Total Nilai Pesanan</p>
+                                    <h6 class="fw-bold">Rp {{ number_format($salesOrder->total_amount, 0, ',', '.') }}</h6>
                                 </div>
                                 <div class="col-md-4 border-start-md ps-md-4">
-                                    <p class="text-muted small fw-bold text-uppercase mb-1">Kuantitas Masuk</p>
-                                    <h6 class="fw-bold text-primary">{{ number_format($inbound->qty, 0, ',', '.') }} {{ $inbound->product->unit }}</h6>
+                                    <p class="text-muted small fw-bold text-uppercase mb-1">Deskripsi/Keterangan</p>
+                                    <h6 class="fw-bold text-primary">{{ $salesOrder->description ?? 'Tidak ada catatan.' }}</h6>
                                 </div>
                             </div>
 
-                            <h5 class="fw-bold mb-4">Riwayat Status Gudang</h5>
+                            <h5 class="fw-bold mb-4">Riwayat Status Pesanan</h5>
                             
                             <div class="position-relative">
                                 <div class="timeline-line"></div>
                                 
-                                {{-- Jika ada QC --}}
-                                @if($inbound->qcInspection)
-                                    <div class="timeline-item">
-                                        <div class="position-absolute" style="left:0; top:0;">
-                                            <div class="timeline-node active"></div>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-1">
-                                            <h6 class="fw-bold text-primary mb-1">Quality Control Selesai ({{ ucfirst($inbound->qcInspection->status) }})</h6>
-                                            <small class="text-muted fw-medium">{{ $inbound->qcInspection->created_at->format('d M Y, H:i') }}</small>
-                                        </div>
-                                        <p class="text-muted mb-0">Barang telah melalui inspeksi kualitas oleh {{ $inbound->qcInspection->inspector->name ?? 'Inspektur' }}. Catatan: {{ $inbound->qcInspection->notes ?? '-' }}</p>
-                                    </div>
-                                @endif
-
-                                {{-- Selalu Tampilkan Inbound --}}
                                 <div class="timeline-item">
                                     <div class="position-absolute" style="left:0; top:0;">
-                                        <div class="timeline-node {{ !$inbound->qcInspection ? 'active' : '' }}"></div>
+                                        <div class="timeline-node active"></div>
                                     </div>
                                     <div class="d-flex justify-content-between mb-1">
-                                        <h6 class="fw-bold {{ !$inbound->qcInspection ? 'text-primary' : 'text-dark' }} mb-1">Barang Diterima di Gudang</h6>
-                                        <small class="text-muted fw-medium">{{ $inbound->created_at->format('d M Y, H:i') }}</small>
+                                        <h6 class="fw-bold text-primary mb-1">Status Saat Ini: {{ $salesOrder->status }}</h6>
+                                        <small class="text-muted fw-medium">{{ $salesOrder->updated_at->format('d M Y, H:i') }}</small>
                                     </div>
-                                    <p class="text-muted mb-0">Barang telah tiba di fasilitas gudang dan diterima oleh staf logistik ({{ $inbound->receiver->name ?? 'Staf' }}).</p>
+                                    <p class="text-muted mb-0">Pesanan saat ini berada pada tahap {{ strtolower($salesOrder->status) }}.</p>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="position-absolute" style="left:0; top:0;">
+                                        <div class="timeline-node"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <h6 class="fw-bold text-dark mb-1">Pesanan Dibuat</h6>
+                                        <small class="text-muted fw-medium">{{ $salesOrder->created_at->format('d M Y, H:i') }}</small>
+                                    </div>
+                                    <p class="text-muted mb-0">Sales Order telah berhasil dibuat dan direkam di dalam sistem.</p>
                                 </div>
                             </div>
+
+                            <div class="text-center mt-5 pt-3 border-top">
+                                <a href="/track" class="btn btn-outline-primary rounded-pill px-4">
+                                    <i class="bi bi-search me-2"></i>Lacak Nomor Lainnya
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 @else
-                    <!-- Tampilan Awal jika belum ada pencarian -->
                     <div class="text-center text-muted py-5 mt-4">
-                        <i class="bi bi-box-seam display-1 opacity-25 mb-3 d-block"></i>
+                        <i class="bi bi-search display-1 opacity-25 mb-3 d-block"></i>
                         <h5>Sistem Pelacakan Siap</h5>
-                        <p>Masukkan Nomor Batch Inbound Anda untuk melihat detail informasi produk.</p>
+                        <p>Masukkan Nomor Sales Order (SO) Anda untuk melihat detail pengiriman.</p>
                     </div>
                 @endif
             </div>
         </div>
     </div>
 
-    <!-- Footer Minimalis -->
     <footer class="bg-dark text-white pt-5 pb-3 mt-auto">
         <div class="container text-center">
             <h5 class="fw-bold mb-3"><i class="bi bi-buildings-fill text-primary me-2"></i>WarehouseTrack</h5>

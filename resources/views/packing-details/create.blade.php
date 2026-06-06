@@ -43,7 +43,8 @@
                                         required>
                                     <option value="" selected disabled>-- Pilih Inbound --</option>
                                     @foreach($inbounds as $inbound)
-                                        <option value="{{ $inbound->id }}"
+                                        <option value="{{ $inbound->id }}" 
+                                                data-product-id="{{ $inbound->product_id }}"
                                             {{ old('inbound_id') == $inbound->id ? 'selected' : '' }}>
                                             #{{ $inbound->id }} – {{ $inbound->product->sku ?? '—' }}
                                             | {{ $inbound->product->name ?? '—' }}
@@ -60,9 +61,10 @@
                                 </label>
                                 <select name="product_id"
                                         id="product_id"
-                                        class="form-select form-select-lg bg-light border-0 @error('product_id') is-invalid @enderror"
+                                        class="form-select form-select-lg border-0 @error('product_id') is-invalid @enderror"
+                                        style="pointer-events: none; background-color: #e9ecef;"
                                         required>
-                                    <option value="" selected disabled>-- Pilih Produk --</option>
+                                    <option value="" selected disabled>-- Produk Akan Terisi Otomatis --</option>
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}"
                                             {{ old('product_id') == $product->id ? 'selected' : '' }}>
@@ -156,4 +158,30 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inboundSelect = document.getElementById('inbound_id');
+            const productSelect = document.getElementById('product_id');
+
+            // Jalankan fungsi update saat inbound dipilih
+            if (inboundSelect && productSelect) {
+                inboundSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const productId = selectedOption.getAttribute('data-product-id');
+
+                    if (productId) {
+                        productSelect.value = productId;
+                    } else {
+                        productSelect.value = '';
+                    }
+                });
+
+                // Cek jika halaman direfresh dan inbound sudah terpilih (misal karena error form)
+                if(inboundSelect.value !== "") {
+                    // Trigger event change secara manual
+                    inboundSelect.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+    </script>
 @endsection

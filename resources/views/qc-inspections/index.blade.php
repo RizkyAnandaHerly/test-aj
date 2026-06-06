@@ -106,10 +106,10 @@
 
                                 {{-- Aksi --}}
                                 <td class="pe-4 text-center">
-                                    <button class="btn btn-sm btn-outline-secondary fw-semibold px-3"
-                                            title="Detail (coming soon)" disabled>
+                                    <a href="{{ route('qc-inspections.show', $inspection) }}"
+                                       class="btn btn-sm btn-outline-info fw-semibold px-3" title="Detail">
                                         <i class="bi bi-eye me-1"></i>Detail
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty

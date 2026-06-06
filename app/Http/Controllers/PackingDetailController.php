@@ -50,13 +50,22 @@ class PackingDetailController extends Controller
         ]);
 
         $validator->after(function ($validator) use ($request) {
-            if ($request->filled('inbound_id') && $request->filled('product_id')) {
+            if ($request->filled('inbound_id')) {
                 $inbound = Inbound::find($request->input('inbound_id'));
-                if ($inbound && $inbound->product_id !== (int) $request->input('product_id')) {
-                    $validator->errors()->add('product_id', 'Produk harus sesuai dengan inbound yang dipilih.');
+                
+                if ($inbound) {
+                    // Cek kesesuaian produk dengan inbound
+                    if ($request->filled('product_id') && $inbound->product_id !== (int) $request->input('product_id')) {
+                        $validator->errors()->add('product_id', 'Produk harus sesuai dengan inbound yang dipilih.');
+                    }
+                    
+                    // PERBAIKAN: Cek agar jumlah packing tidak melebihi jumlah inbound
+                    if ($request->filled('quantity') && $request->input('quantity') > $inbound->quantity) {
+                        $validator->errors()->add('quantity', 'Jumlah packing tidak boleh melebihi jumlah inbound (' . $inbound->quantity . ').');
+                    }
                 }
             }
-
+            // Cek ketersediaan stok global produk
             if ($request->filled('product_id') && $request->filled('quantity')) {
                 $product = Product::find($request->input('product_id'));
                 if ($product && $request->input('quantity') > $product->stock_qty) {
