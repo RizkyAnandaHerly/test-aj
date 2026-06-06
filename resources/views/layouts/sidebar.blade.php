@@ -454,6 +454,26 @@
                class="sidebar-item {{ request()->routeIs('packing-details.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
             </a>
+            
+            <a href="{{ route('certifications.index') }}"
+               class="sidebar-item {{ request()->routeIs('certifications.*') ? 'active' : '' }}">
+                <i class="bi bi-award nav-icon"></i> Sertifikasi
+            </a>
+
+            <a href="{{ route('sales-orders.index') }}"
+               class="sidebar-item {{ request()->routeIs('sales-orders.*') ? 'active' : '' }}">
+                <i class="bi bi-cart nav-icon"></i> Sales Order
+            </a>
+
+            <a href="{{ route('shipping-documents.index') }}"
+               class="sidebar-item {{ request()->routeIs('shipping-documents.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text nav-icon"></i> Dokumen Pengiriman
+            </a>
+
+            <a href="{{ route('stock-opnames.index') }}"
+               class="sidebar-item {{ request()->routeIs('stock-opnames.*') ? 'active' : '' }}">
+                <i class="bi bi-clipboard-data nav-icon"></i> Stock Opname
+            </a>
 
         {{-- ────────────────────── REQUESTER / DEFAULT ────────────────────── --}}
         @else
