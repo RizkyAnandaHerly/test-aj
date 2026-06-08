@@ -73,12 +73,7 @@ class LocationController extends Controller
         if (($currentQty + $validated['qty_stored']) > $location->capacity) {
             $available = $location->capacity - $currentQty;
 
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'qty_stored' => 'Kapasitas tidak mencukupi. Tersedia: '
-                        . $available . ' dari kapasitas ' . $location->capacity . '.',
-                ]);
+            return back()->withErrors(['qty_stored' => 'Kapasitas tidak mencukupi. Tersedia: ' . $available . ' dari kapasitas ' . $location->capacity . '.'])->withInput();
         }
 
         // ── 3. Upsert + status update (atomic) ───────────────────────────────
