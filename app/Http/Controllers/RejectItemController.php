@@ -60,8 +60,8 @@ class RejectItemController extends Controller
                     }
                     
                     // PERBAIKAN: Cek agar jumlah reject tidak melebihi jumlah inbound
-                    if ($request->filled('qty_rejected') && $request->input('qty_rejected') > $inbound->quantity) {
-                        $validator->errors()->add('qty_rejected', 'Jumlah reject tidak boleh melebihi jumlah inbound (' . $inbound->quantity . ').');
+                    if ($request->filled('qty_rejected') && $request->input('qty_rejected') > $inbound->qty) {
+                        $validator->errors()->add('qty_rejected', 'Jumlah reject tidak boleh melebihi jumlah inbound (' . $inbound->qty . ').');
                     }
                 }
             }

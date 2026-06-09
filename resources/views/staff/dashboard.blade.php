@@ -314,7 +314,7 @@
 </div>
 
 {{-- ── Coming Soon Modules ───────────────────────────────────────────────── --}}
-<div class="card border-0 shadow-sm rounded-3">
+{{-- <div class="card border-0 shadow-sm rounded-3">
     <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
         <h6 class="fw-bold text-dark mb-0">
             <i class="bi bi-rocket-takeoff text-secondary me-2"></i>Fitur Berikutnya
@@ -399,6 +399,6 @@
             @endforeach
         </div>
     </div>
-</div>
+</div> --}}
 
 @endsection
