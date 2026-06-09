@@ -107,6 +107,10 @@ class StockOpnameController extends Controller
      */
     public function updateDetail(Request $request, StockOpname $stockOpname)
     {
+        if ($stockOpname->status !== 'in_progress') {
+            return back()->with('error', 'Stock opname sudah tidak bisa diubah.');
+        }
+
         $validator = Validator::make($request->all(), [
             'product_location_id' => ['required', 'integer', 'exists:product_locations,id'],
             'physical_qty'        => ['required', 'integer', 'min:0'],
@@ -116,38 +120,53 @@ class StockOpnameController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $validated = $validator->validated();
-        $productLocation = ProductLocation::findOrFail($validated['product_location_id']);
+        try {
+            $validated = $validator->validated();
+            $productLocation = ProductLocation::findOrFail($validated['product_location_id']);
 
-        // Hitung perbedaan
-        $system_qty = $productLocation->qty_stored;
-        $physical_qty = $validated['physical_qty'];
-        $difference = $physical_qty - $system_qty;
+            // Hitung perbedaan
+            $system_qty   = $productLocation->qty_stored;
+            $physical_qty = $validated['physical_qty'];
+            $difference   = $physical_qty - $system_qty;
 
-        // Check if detail already exists
-        $detail = StockOpnameDetail::where('stock_opname_id', $stockOpname->id)
-                                   ->where('product_location_id', $productLocation->id)
-                                   ->first();
+            // Upsert: update jika sudah ada, buat baru jika belum
+            StockOpnameDetail::updateOrCreate(
+                [
+                    'stock_opname_id'     => $stockOpname->id,
+                    'product_location_id' => $productLocation->id,
+                ],
+                [
+                    'product_id'   => $productLocation->product_id,
+                    'system_qty'   => $system_qty,
+                    'physical_qty' => $physical_qty,
+                    'difference'   => $difference,
+                ]
+            );
 
-        if ($detail) {
-            $detail->update([
-                'system_qty'   => $system_qty,
-                'physical_qty' => $physical_qty,
-                'difference'   => $difference,
-            ]);
-        } else {
-            StockOpnameDetail::create([
-                'stock_opname_id'    => $stockOpname->id,
-                'product_location_id' => $productLocation->id,
-                'product_id'         => $productLocation->product_id,
-                'system_qty'         => $system_qty,
-                'physical_qty'       => $physical_qty,
-                'difference'         => $difference,
-            ]);
+            return redirect()->route('stock-opnames.edit', $stockOpname->id)
+                             ->with('success', 'Data perhitungan fisik berhasil disimpan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Hapus satu detail perhitungan fisik.
+     */
+    public function destroyDetail(StockOpname $stockOpname, StockOpnameDetail $detail)
+    {
+        if ($stockOpname->status !== 'in_progress') {
+            return back()->with('error', 'Stock opname sudah tidak bisa diubah.');
         }
 
+        if ($detail->stock_opname_id !== $stockOpname->id) {
+            return back()->with('error', 'Detail tidak ditemukan pada stock opname ini.');
+        }
+
+        $detail->delete();
+
         return redirect()->route('stock-opnames.edit', $stockOpname->id)
-                         ->with('success', 'Data perhitungan fisik berhasil disimpan.');
+                         ->with('success', 'Detail perhitungan fisik berhasil dihapus.');
     }
 
     /**

@@ -259,6 +259,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('stock-opnames', StockOpnameController::class);
     Route::post('/stock-opnames/{stockOpname}/update-detail', [StockOpnameController::class, 'updateDetail'])
          ->name('stock-opnames.update-detail');
+    Route::delete('/stock-opnames/{stockOpname}/detail/{detail}', [StockOpnameController::class, 'destroyDetail'])
+         ->name('stock-opnames.destroy-detail');
     Route::post('/stock-opnames/{stockOpname}/apply', [StockOpnameController::class, 'apply'])
          ->name('stock-opnames.apply');
     Route::post('/stock-opnames/{stockOpname}/cancel', [StockOpnameController::class, 'cancel'])
@@ -275,9 +277,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/reports/movements/export', [ReportController::class, 'exportExcel'])
-        ->name('reports.movements.export');
+Route::middleware(['auth'])->prefix('reports/movements')->name('reports.movements.')->group(function () {
+    Route::get('/',            [ReportController::class, 'index'])->name('index');
+    Route::get('/export/excel', [ReportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export/csv',   [ReportController::class, 'exportCsv'])->name('export.csv');
+    Route::get('/export/pdf',   [ReportController::class, 'exportPdf'])->name('export.pdf');
 });
 
 require __DIR__.'/auth.php';

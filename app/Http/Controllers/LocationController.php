@@ -60,7 +60,7 @@ class LocationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+            return redirect()->route('locations.create')->withErrors($validator)->withInput();
         }
 
         $validated = $validator->validated();
@@ -73,12 +73,7 @@ class LocationController extends Controller
         if (($currentQty + $validated['qty_stored']) > $location->capacity) {
             $available = $location->capacity - $currentQty;
 
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'qty_stored' => 'Kapasitas tidak mencukupi. Tersedia: '
-                        . $available . ' dari kapasitas ' . $location->capacity . '.',
-                ]);
+            return redirect()->route('locations.create')->withErrors(['qty_stored' => 'Kapasitas tidak mencukupi. Tersedia: ' . $available . ' dari kapasitas ' . $location->capacity . '.'])->withInput();
         }
 
         // ── 3. Upsert + status update (atomic) ───────────────────────────────

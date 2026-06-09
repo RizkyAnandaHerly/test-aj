@@ -376,9 +376,9 @@
                 <i class="bi bi-journal-text nav-icon"></i> Activity Log
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
-                <i class="bi bi-file-earmark-bar-graph nav-icon"></i> Laporan
-                <span class="badge-soon">Soon</span>
+            <a href="{{ route('reports.movements.index') }}"
+               class="sidebar-item {{ request()->routeIs('reports.movements.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-bar-graph nav-icon"></i> Laporan & Export
             </a>
 
         {{-- ────────────────────── MANAGER ────────────────────── --}}
@@ -408,9 +408,9 @@
                 <i class="bi bi-journal-text nav-icon"></i> Activity Log
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
+            <a href="{{ route('reports.movements.index') }}"
+               class="sidebar-item {{ request()->routeIs('reports.movements.*') ? 'active' : '' }}">
                 <i class="bi bi-file-earmark-arrow-down nav-icon"></i> Laporan & Export
-                <span class="badge-soon">Soon</span>
             </a>
 
         {{-- ────────────────────── STAFF ────────────────────── --}}
@@ -453,6 +453,26 @@
             <a href="{{ route('packing-details.index') }}"
                class="sidebar-item {{ request()->routeIs('packing-details.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam nav-icon"></i> Packing & Pelabelan
+            </a>
+            
+            <a href="{{ route('certifications.index') }}"
+               class="sidebar-item {{ request()->routeIs('certifications.*') ? 'active' : '' }}">
+                <i class="bi bi-award nav-icon"></i> Sertifikasi
+            </a>
+
+            <a href="{{ route('sales-orders.index') }}"
+               class="sidebar-item {{ request()->routeIs('sales-orders.*') ? 'active' : '' }}">
+                <i class="bi bi-cart nav-icon"></i> Sales Order
+            </a>
+
+            <a href="{{ route('shipping-documents.index') }}"
+               class="sidebar-item {{ request()->routeIs('shipping-documents.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text nav-icon"></i> Dokumen Pengiriman
+            </a>
+
+            <a href="{{ route('stock-opnames.index') }}"
+               class="sidebar-item {{ request()->routeIs('stock-opnames.*') ? 'active' : '' }}">
+                <i class="bi bi-clipboard-data nav-icon"></i> Stock Opname
             </a>
 
         {{-- ────────────────────── REQUESTER / DEFAULT ────────────────────── --}}
