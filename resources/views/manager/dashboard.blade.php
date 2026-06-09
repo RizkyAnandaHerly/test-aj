@@ -477,14 +477,18 @@
 {{-- ── Coming Soon Placeholders ─────────────────────────────────────────── --}}
 <div class="row g-3">
     <div class="col-12 col-md-6">
-        <div class="card border-0 shadow-sm rounded-3" style="opacity:.65;">
-            <div class="card-body p-4 text-center">
-                <div style="font-size:1.8rem;margin-bottom:8px;">📊</div>
-                <div class="fw-bold text-dark mb-1">Laporan & Export</div>
-                <div class="text-muted small mb-2">Ekspor data ke Excel / PDF</div>
-                <span class="badge rounded-pill" style="background:#e2e8f0;color:#94a3b8;font-size:.7rem;font-weight:700;">Coming Soon</span>
+        <a href="{{ route('reports.movements.index') }}" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-3 h-100" style="transition:transform .2s,box-shadow .2s;">
+                <div class="card-body p-4 text-center">
+                    <div style="font-size:1.8rem;margin-bottom:8px;">📊</div>
+                    <div class="fw-bold text-dark mb-1">Laporan & Export</div>
+                    <div class="text-muted small mb-2">Filter & unduh data ke Excel / CSV / PDF</div>
+                    <span class="badge rounded-pill" style="background:#dcfce7;color:#166534;font-size:.7rem;font-weight:700;">
+                        <i class="bi bi-check-circle-fill me-1"></i>Tersedia
+                    </span>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-md-6">
         <div class="card border-0 shadow-sm rounded-3" style="opacity:.65;">

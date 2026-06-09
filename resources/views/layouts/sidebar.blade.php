@@ -376,9 +376,9 @@
                 <i class="bi bi-journal-text nav-icon"></i> Activity Log
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
-                <i class="bi bi-file-earmark-bar-graph nav-icon"></i> Laporan
-                <span class="badge-soon">Soon</span>
+            <a href="{{ route('reports.movements.index') }}"
+               class="sidebar-item {{ request()->routeIs('reports.movements.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-bar-graph nav-icon"></i> Laporan & Export
             </a>
 
         {{-- ────────────────────── MANAGER ────────────────────── --}}
@@ -408,9 +408,9 @@
                 <i class="bi bi-journal-text nav-icon"></i> Activity Log
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
+            <a href="{{ route('reports.movements.index') }}"
+               class="sidebar-item {{ request()->routeIs('reports.movements.*') ? 'active' : '' }}">
                 <i class="bi bi-file-earmark-arrow-down nav-icon"></i> Laporan & Export
-                <span class="badge-soon">Soon</span>
             </a>
 
         {{-- ────────────────────── STAFF ────────────────────── --}}
