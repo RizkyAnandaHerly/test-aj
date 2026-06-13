@@ -14,6 +14,34 @@ use Illuminate\Support\Facades\Validator;
 class InboundController extends Controller
 {
     /**
+     * Menampilkan daftar riwayat barang masuk (Inbound).
+     */
+    public function index(Request $request)
+    {
+        $query = Inbound::with(['product', 'vendor', 'receiver', 'qcInspection'])
+                        ->orderBy('received_date', 'desc')
+                        ->orderBy('created_at', 'desc');
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('product', function ($p) use ($search) {
+                    $p->where('name', 'like', "%{$search}%")
+                      ->orWhere('sku', 'like', "%{$search}%");
+                })
+                ->orWhereHas('vendor', function ($v) use ($search) {
+                    $v->where('name', 'like', "%{$search}%")
+                      ->orWhere('code', 'like', "%{$search}%");
+                })
+                ->orWhere('batch_no', 'like', "%{$search}%");
+            });
+        }
+
+        $inbounds = $query->paginate(10)->withQueryString();
+
+        return view('inbounds.index', compact('inbounds'));
+    }
+
+    /**
      * Form Input Barang Masuk (updated with vendor dropdown + cascading location).
      */
     public function create()

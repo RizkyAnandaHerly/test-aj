@@ -9,23 +9,35 @@ class TrackController extends Controller
 {
     public function index(Request $request)
     {
-        // Mendapatkan input pencarian (misal dari form <input name="order_id">)
-        $orderId = $request->query('search') ?? $request->query('order_id');
+        // Mendapatkan input pencarian (bisa no Sales Order atau Kode Packing PKG-)
+        $search = $request->query('search') ?? $request->query('order_id');
         
         $salesOrder = null;
-        if ($orderId) {
-            $salesOrder = SalesOrder::where('order_number', $orderId)->first();
+        $packingDetail = null;
+        $type = 'so'; // default
+
+        if ($search) {
+            $searchUpper = strtoupper(trim($search));
+            if (str_starts_with($searchUpper, 'PKG-')) {
+                $type = 'packing';
+                $packingDetail = \App\Models\PackingDetail::with([
+                    'product.certifications',
+                    'packer',
+                    'inbound.vendor',
+                    'inbound.qcInspection.inspector',
+                    'inbound.location'
+                ])->where('label_code', $searchUpper)->first();
+            } else {
+                $salesOrder = SalesOrder::where('order_number', $search)->first();
+            }
         }
 
         return view('track.result', [
-            'orderId'    => $orderId,
-            'salesOrder' => $salesOrder
-        ]);
-
-        // Kirim data SO ke view
-        return view('track.result', [
-            'orderId'    => $orderId,
-            'salesOrder' => $salesOrder // Variabel diubah dari 'inbound' menjadi 'salesOrder'
+            'orderId'       => $search, // tetapkan kompatibilitas variabel orderId
+            'search'        => $search,
+            'salesOrder'    => $salesOrder,
+            'packingDetail' => $packingDetail,
+            'type'          => $type
         ]);
     }
 }

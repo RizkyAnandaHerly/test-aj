@@ -74,4 +74,12 @@ class VendorController extends Controller
         return redirect()->route('vendors.index')
                          ->with('success', 'Data vendor berhasil diperbarui.');
     }
+
+    public function destroy(Vendor $vendor)
+    {
+        $vendor->delete();
+
+        return redirect()->route('vendors.index')
+                         ->with('success', 'Vendor berhasil dihapus.');
+    }
 }

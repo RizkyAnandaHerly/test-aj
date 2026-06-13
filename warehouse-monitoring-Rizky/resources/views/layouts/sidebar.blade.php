@@ -349,9 +349,9 @@
 
             <div class="sidebar-section-label">Operasional</div>
 
-            <a href="{{ route('inbounds.create') }}"
+            <a href="{{ route('inbounds.index') }}"
                class="sidebar-item {{ request()->routeIs('inbounds.*') ? 'active' : '' }}">
-                <i class="bi bi-box-arrow-in-down nav-icon"></i> Input Inbound
+                <i class="bi bi-box-arrow-in-down nav-icon"></i> Data Inbound
             </a>
 
             <a href="{{ route('locations.index') }}"
@@ -430,9 +430,9 @@
 
             <div class="sidebar-section-label">Operasional Harian</div>
 
-            <a href="{{ route('inbounds.create') }}"
+            <a href="{{ route('inbounds.index') }}"
                class="sidebar-item {{ request()->routeIs('inbounds.*') ? 'active' : '' }}">
-                <i class="bi bi-box-arrow-in-down nav-icon"></i> Input Inbound
+                <i class="bi bi-box-arrow-in-down nav-icon"></i> Data Inbound
             </a>
 
             <a href="{{ route('locations.index') }}"

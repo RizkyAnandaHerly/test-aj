@@ -151,39 +151,97 @@ class StockOpnameController extends Controller
     }
 
     /**
-     * Terapkan penyesuaian stok berdasarkan hasil opname.
+     * Ajukan hasil perhitungan stock opname untuk diterapkan atau ditinjau jika ada selisih.
      */
     public function apply(Request $request, StockOpname $stockOpname)
     {
         if ($stockOpname->status !== 'in_progress') {
-            return back()->with('error', 'Stock opname hanya bisa diterapkan jika masih dalam status In Progress.');
+            return back()->with('error', 'Stock opname hanya bisa diajukan jika masih dalam status In Progress.');
         }
 
-        // Load all details
-        $details = StockOpnameDetail::where('stock_opname_id', $stockOpname->id)->get();
+        // Cek apakah ada detail opname yang memiliki perbedaan (selisih)
+        $hasDifference = StockOpnameDetail::where('stock_opname_id', $stockOpname->id)
+                                          ->where('difference', '!=', 0)
+                                          ->exists();
+
+        if ($hasDifference) {
+            // Jika ada selisih, ganti status ke pending_adjustment untuk ditinjau Manager/Admin
+            $stockOpname->update([
+                'status' => 'pending_adjustment'
+            ]);
+
+            return redirect()->route('stock-opnames.show', $stockOpname->id)
+                             ->with('warning', 'Terdeteksi selisih stok. Stock opname diajukan ke Manager/Admin untuk persetujuan penyesuaian.');
+        } else {
+            // Jika tidak ada selisih, langsung selesaikan tanpa adjustment log
+            $stockOpname->update([
+                'status' => 'completed',
+                'completed_at' => now(),
+            ]);
+
+            return redirect()->route('stock-opnames.show', $stockOpname->id)
+                             ->with('success', 'Stock opname selesai. Seluruh stok fisik sesuai dengan sistem.');
+        }
+    }
+
+    /**
+     * Setujui & Terapkan penyesuaian stok (Hanya untuk Admin/Manager).
+     */
+    public function approveAdjustment(Request $request, StockOpname $stockOpname)
+    {
+        // Pastikan role berwenang
+        if (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('manager')) {
+            return back()->with('error', 'Anda tidak memiliki wewenang untuk menyetujui penyesuaian stok.');
+        }
+
+        if ($stockOpname->status !== 'pending_adjustment') {
+            return back()->with('error', 'Hanya stock opname berstatus Pending Adjustment yang dapat disetujui.');
+        }
+
+        $details = StockOpnameDetail::with('productLocation.location')->where('stock_opname_id', $stockOpname->id)->get();
 
         DB::transaction(function () use ($stockOpname, $details) {
             foreach ($details as $detail) {
                 if ($detail->difference !== 0) {
                     $product = $detail->product;
+                    $productLocation = $detail->productLocation;
                     $adjustment_qty = abs($detail->difference);
                     $adjustment_type = $detail->difference > 0 ? 'increase' : 'decrease';
 
-                    // Update stock produk
+                    // 1. Update stock global produk
                     if ($adjustment_type === 'increase') {
                         $product->increment('stock_qty', $adjustment_qty);
                     } else {
                         $product->decrement('stock_qty', $adjustment_qty);
                     }
 
-                    // Log adjustment
+                    // 2. Update stock spesifik di level lokasi penyimpanan
+                    if ($productLocation) {
+                        $productLocation->qty_stored = $detail->physical_qty;
+                        $productLocation->save();
+
+                        // 3. Update status kapasitas lokasi rak
+                        $location = $productLocation->location;
+                        if ($location) {
+                            $totalLocationQty = ProductLocation::where('location_id', $location->id)->sum('qty_stored');
+                            $location->update([
+                                'status' => match (true) {
+                                    $totalLocationQty >= $location->capacity => 'full',
+                                    $totalLocationQty > 0                   => 'reserved',
+                                    default                                 => 'available',
+                                },
+                            ]);
+                        }
+                    }
+
+                    // 4. Log adjustment
                     StockAdjustmentLog::create([
                         'stock_opname_id'  => $stockOpname->id,
                         'product_id'       => $product->id,
-                        'location_id'      => $detail->productLocation->location_id,
+                        'location_id'      => $productLocation ? $productLocation->location_id : 1, // fallback ke default jika kosong
                         'adjustment_qty'   => $adjustment_qty,
                         'adjustment_type'  => $adjustment_type,
-                        'reason'           => 'Penyesuaian dari Stock Opname',
+                        'reason'           => 'Penyesuaian disetujui dari Stock Opname',
                     ]);
                 }
             }
@@ -196,7 +254,30 @@ class StockOpnameController extends Controller
         });
 
         return redirect()->route('stock-opnames.show', $stockOpname->id)
-                         ->with('success', 'Penyesuaian stok berhasil diterapkan.');
+                         ->with('success', 'Penyesuaian stok berhasil disetujui dan diterapkan.');
+    }
+
+    /**
+     * Tolak penyesuaian stok dan kembalikan ke staff untuk hitung ulang.
+     */
+    public function rejectAdjustment(Request $request, StockOpname $stockOpname)
+    {
+        // Pastikan role berwenang
+        if (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('manager')) {
+            return back()->with('error', 'Anda tidak memiliki wewenang untuk menolak penyesuaian stok.');
+        }
+
+        if ($stockOpname->status !== 'pending_adjustment') {
+            return back()->with('error', 'Hanya stock opname berstatus Pending Adjustment yang dapat ditolak.');
+        }
+
+        $stockOpname->update([
+            'status' => 'in_progress',
+            'notes' => ($stockOpname->notes ? $stockOpname->notes . "\n" : "") . "[Penyesuaian ditolak oleh " . Auth::user()->name . " pada " . now()->format('d/m/Y H:i') . "]"
+        ]);
+
+        return redirect()->route('stock-opnames.edit', $stockOpname->id)
+                         ->with('info', 'Penyesuaian ditolak. Status dikembalikan ke In Progress agar dapat dihitung ulang.');
     }
 
     /**

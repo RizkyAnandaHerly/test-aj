@@ -169,15 +169,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     ]);
 
     // Master Vendor (Modul 0B)
-    Route::resource('vendors', VendorController::class)->only([
-        'index', 'create', 'store', 'edit', 'update',
-    ]);
+    Route::resource('vendors', VendorController::class);
 });
 
 /*
 |--------------------------------------------------------------------------
 | All Authenticated Users — Shared Operational Routes
 |--------------------------------------------------------------------------
+|
 */
 
 Route::middleware(['auth'])->group(function () {
@@ -185,8 +184,13 @@ Route::middleware(['auth'])->group(function () {
     // ── Katalog Barang — semua role dapat melihat ─────────────────────────
     Route::resource('products', ProductController::class)->only(['index', 'show']);
 
+    // ── CRUD Barang khusus Admin & Staff ──────────────────────────────────
+    Route::middleware(['role:admin,staff'])->group(function () {
+        Route::resource('products', ProductController::class)->except(['index', 'show']);
+    });
+
     // ── Form Inbound (admin + staff) ──────────────────────────────────────
-    Route::resource('inbounds', InboundController::class)->only(['create', 'store']);
+    Route::resource('inbounds', InboundController::class)->only(['index', 'create', 'store']);
 
     // ── Penempatan Lokasi (admin + staff) ─────────────────────────────────
     Route::resource('locations', LocationController::class)->only([
@@ -228,11 +232,8 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    // ── Katalog Barang — semua role dapat melihat ─────────────────────────
-    Route::resource('products', ProductController::class)->only(['index', 'show']);
-
     // ── Form Inbound (admin + staff) ──────────────────────────────────────
-    Route::resource('inbounds', InboundController::class)->only(['create', 'store']);
+    Route::resource('inbounds', InboundController::class)->only(['index', 'create', 'store']);
 
     // ── Penempatan Lokasi (admin + staff) ─────────────────────────────────
     Route::resource('locations', LocationController::class)->only([
@@ -261,6 +262,10 @@ Route::middleware(['auth'])->group(function () {
          ->name('stock-opnames.update-detail');
     Route::post('/stock-opnames/{stockOpname}/apply', [StockOpnameController::class, 'apply'])
          ->name('stock-opnames.apply');
+    Route::post('/stock-opnames/{stockOpname}/approve-adjustment', [StockOpnameController::class, 'approveAdjustment'])
+         ->name('stock-opnames.approve-adjustment');
+    Route::post('/stock-opnames/{stockOpname}/reject-adjustment', [StockOpnameController::class, 'rejectAdjustment'])
+         ->name('stock-opnames.reject-adjustment');
     Route::post('/stock-opnames/{stockOpname}/cancel', [StockOpnameController::class, 'cancel'])
          ->name('stock-opnames.cancel');
 

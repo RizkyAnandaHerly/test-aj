@@ -81,4 +81,12 @@ class Product extends Model
     {
         return $this->hasMany(RejectItem::class);
     }
+
+    /**
+     * A product has many certifications.
+     */
+    public function certifications(): HasMany
+    {
+        return $this->hasMany(Certification::class);
+    }
 }
