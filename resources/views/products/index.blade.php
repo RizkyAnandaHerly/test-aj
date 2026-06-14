@@ -3,6 +3,14 @@
 @section('content')
 
 
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill text-success flex-shrink-0"></i>
+            <span class="fw-semibold">{{ session('success') }}</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     {{-- ── Search & Filter Bar ─────────────────────────────────────────────── --}}
     <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-body px-4 py-3">
@@ -73,13 +81,20 @@
 
     {{-- ── Products Table ───────────────────────────────────────────────────── --}}
     <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white border-bottom pt-4 pb-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
             <h5 class="fw-bold mb-0 text-dark">
                 <i class="bi bi-boxes me-2 text-primary"></i>Daftar Produk Master
             </h5>
-            <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">
-                {{ $products->total() }} barang ditemukan
-            </span>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">
+                    {{ $products->total() }} barang ditemukan
+                </span>
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('staff'))
+                    <a href="{{ route('products.create') }}" class="btn btn-primary fw-bold px-4 shadow-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Barang
+                    </a>
+                @endif
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -155,12 +170,25 @@
 
                                 {{-- Aksi --}}
                                 <td class="pe-4 text-center">
-                                    <a href="{{ route('products.show', $product) }}"
-                                       class="btn btn-sm btn-outline-primary fw-semibold px-3">
-                                        <i class="bi bi-eye me-1"></i>Detail
-                                    </a>
-                                </td>
-
+                                    <div class="d-inline-flex gap-1">
+                                        <a href="{{ route('products.show', $product) }}"
+                                           class="btn btn-sm btn-light border shadow-sm" title="Detail">
+                                            <i class="bi bi-eye-fill text-primary"></i>
+                                        </a>
+                                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('staff'))
+                                            <a href="{{ route('products.edit', $product) }}"
+                                               class="btn btn-sm btn-light border shadow-sm" title="Edit">
+                                                <i class="bi bi-pencil-square text-warning-emphasis"></i>
+                                            </a>
+                                            <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang {{ $product->name }}?')" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-light border shadow-sm" title="Hapus">
+                                                    <i class="bi bi-trash-fill text-danger"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                             </tr>
                         @empty
                             <tr>

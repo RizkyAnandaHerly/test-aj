@@ -21,6 +21,9 @@
                             @case('in_progress')
                                 <span class="badge bg-info fs-6">Sedang Berjalan</span>
                                 @break
+                            @case('pending_adjustment')
+                                <span class="badge bg-warning text-dark fs-6">Menunggu Penyesuaian</span>
+                                @break
                             @case('completed')
                                 <span class="badge bg-success fs-6">Selesai</span>
                                 @break
@@ -59,6 +62,39 @@
                     @endif
                 </div>
             </div>
+
+            {{-- Panel Persetujuan Penyesuaian Stok (Hanya untuk Admin/Manager jika status pending_adjustment) --}}
+            @if($stockOpname->status === 'pending_adjustment' && (Auth::user()->hasRole('admin') || Auth::user()->hasRole('manager')))
+                <div class="card border-0 shadow-sm rounded-4 mb-4" style="border-left: 5px solid #ffc107 !important;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="bg-warning-subtle text-warning rounded p-3">
+                                <i class="bi bi-shield-fill-exclamation fs-3"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold text-dark mb-1">Persetujuan Penyesuaian Stok Diperlukan</h5>
+                                <p class="text-muted small mb-3">
+                                    Hasil perhitungan fisik ini memiliki selisih dengan stok di sistem. Silakan tinjau perbedaan di bawah dan putuskan tindakan selanjutnya.
+                                </p>
+                                <div class="d-flex gap-2">
+                                    <form action="{{ route('stock-opnames.approve-adjustment', $stockOpname->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menerapkan penyesuaian stok ini ke sistem?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success fw-semibold px-4 py-2">
+                                            <i class="bi bi-check2-all me-1"></i> Setujui & Update Stok
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('stock-opnames.reject-adjustment', $stockOpname->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak hasil perhitungan fisik ini dan mengembalikannya ke status In Progress?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-danger fw-semibold px-4 py-2">
+                                            <i class="bi bi-x-circle me-1"></i> Tolak & Hitung Ulang
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             {{-- Detail Perhitungan --}}
             @if($stockOpname->details->isNotEmpty())

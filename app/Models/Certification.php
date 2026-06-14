@@ -48,6 +48,9 @@ class Certification extends Model
 
     public function getDocumentUrlAttribute(): string
     {
+        if (str_starts_with($this->document_path, 'uploads/')) {
+            return asset($this->document_path);
+        }
         return Storage::url($this->document_path);
     }
 }

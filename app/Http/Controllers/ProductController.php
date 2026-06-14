@@ -44,10 +44,98 @@ class ProductController extends Controller
     }
 
     /**
-     * Menampilkan detail satu produk.
+     * Menampilkan detail satu produk beserta sertifikasinya.
      */
     public function show(Product $product)
     {
+        $product->load(['certifications.certifier']);
         return view('products.show', compact('product'));
+    }
+
+    public function create()
+    {
+        return view('products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'sku'         => ['required', 'string', 'max:50', 'unique:products,sku'],
+            'name'        => ['required', 'string', 'max:255'],
+            'category'    => ['nullable', 'string', 'max:255'],
+            'unit'        => ['required', 'string', 'max:50'],
+            'description' => ['nullable', 'string'],
+            'min_stock'   => ['required', 'integer', 'min:0'],
+            'status'      => ['required', 'in:active,inactive'],
+            'image'       => ['nullable', 'image', 'max:2048'],
+        ], [
+            'sku.unique' => 'SKU produk sudah digunakan. Gunakan SKU lain.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $validated = $validator->validated();
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($validated);
+
+        return redirect()->route('products.index')
+                         ->with('success', 'Produk baru berhasil ditambahkan.');
+    }
+
+    public function edit(Product $product)
+    {
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'sku'         => ['required', 'string', 'max:50', 'unique:products,sku,' . $product->id],
+            'name'        => ['required', 'string', 'max:255'],
+            'category'    => ['nullable', 'string', 'max:255'],
+            'unit'        => ['required', 'string', 'max:50'],
+            'description' => ['nullable', 'string'],
+            'min_stock'   => ['required', 'integer', 'min:0'],
+            'status'      => ['required', 'in:active,inactive'],
+            'image'       => ['nullable', 'image', 'max:2048'],
+        ], [
+            'sku.unique' => 'SKU produk sudah digunakan. Gunakan SKU lain.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $validated = $validator->validated();
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            }
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($validated);
+
+        return redirect()->route('products.index')
+                         ->with('success', 'Data produk berhasil diperbarui.');
+    }
+
+    public function destroy(Product $product)
+    {
+        if ($product->image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()->route('products.index')
+                         ->with('success', 'Produk berhasil dihapus.');
     }
 }

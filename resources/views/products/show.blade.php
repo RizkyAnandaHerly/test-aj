@@ -67,6 +67,64 @@
                     </div>
                 </div>
             </div>
+
+            {{-- ── Kartu Sertifikat Kualitas ── --}}
+            <div class="card border-0 shadow-sm rounded-4 mt-4">
+                <div class="card-header bg-white border-bottom px-4 pt-4 pb-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-award-fill me-2 text-success"></i>Sertifikasi & Kualitas Barang
+                    </h5>
+                </div>
+                <div class="card-body px-4 py-3">
+                    @if($product->certifications && $product->certifications->isNotEmpty())
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Jenis Sertifikat</th>
+                                        <th>Nomor Lot</th>
+                                        <th>Region Standar</th>
+                                        <th>Tanggal</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($product->certifications as $cert)
+                                        <tr>
+                                            <td>
+                                                <div class="fw-bold text-dark">{{ $cert->certification_type }}</div>
+                                                <div class="text-muted small" style="font-size: 0.75rem;">Oleh: {{ $cert->certifier->name ?? '—' }}</div>
+                                            </td>
+                                            <td><code class="text-dark small">{{ $cert->lot_number }}</code></td>
+                                            <td>{{ $cert->standard_region }}</td>
+                                            <td class="small">{{ $cert->certification_date->format('d/m/Y') }}</td>
+                                            <td class="text-center">
+                                                @if($cert->status === 'valid')
+                                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">Valid</span>
+                                                @else
+                                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3">{{ ucfirst($cert->status) }}</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{{ $cert->document_url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                                    <i class="bi bi-file-earmark-pdf me-1"></i>Unduh
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-award fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                            <p class="mb-0 small">Belum ada dokumen sertifikat kualitas yang diunggah untuk barang ini.</p>
+                            <p class="text-muted small" style="font-size:0.75rem;">Sertifikat dapat diunggah melalui menu Operasional Harian > Sertifikasi.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
 
         {{-- ── Kartu Stok ───────────────────────────────────────────────────── --}}

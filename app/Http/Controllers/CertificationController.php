@@ -64,7 +64,13 @@ class CertificationController extends Controller
         }
 
         $validated = $validator->validated();
-        $documentPath = $request->file('document')->store('certifications', 'public');
+        
+        // Simpan file langsung ke folder public/uploads/certifications agar terhindar dari isu symlink storage:link yang mati
+        $file = $request->file('document');
+        $filename = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
+        $file->move(public_path('uploads/certifications'), $filename);
+        $documentPath = 'uploads/certifications/' . $filename;
+        
         $status = $validated['standard_region'] === 'Eropa' ? 'valid' : 'pending';
 
         $certification = Certification::create([
@@ -76,7 +82,7 @@ class CertificationController extends Controller
             'lot_number'         => $validated['lot_number'],
             'standard_region'    => $validated['standard_region'],
             'document_path'      => $documentPath,
-            'document_name'      => $request->file('document')->getClientOriginalName(),
+            'document_name'      => $file->getClientOriginalName(),
             'status'             => $status,
             'notes'              => $validated['notes'] ?? null,
         ]);

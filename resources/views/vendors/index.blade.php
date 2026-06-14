@@ -59,9 +59,18 @@
                                     @endif
                                 </td>
                                 <td class="pe-4 text-end">
-                                    <a href="{{ route('vendors.edit', $vendor) }}" class="btn btn-sm btn-light border shadow-sm">
-                                        <i class="bi bi-pencil-square text-primary"></i>
-                                    </a>
+                                    <div class="d-inline-flex gap-1">
+                                        <a href="{{ route('vendors.edit', $vendor) }}" class="btn btn-sm btn-light border shadow-sm" title="Edit">
+                                            <i class="bi bi-pencil-square text-primary"></i>
+                                        </a>
+                                        <form action="{{ route('vendors.destroy', $vendor) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus vendor {{ $vendor->name }}?')" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-light border shadow-sm" title="Hapus">
+                                                <i class="bi bi-trash-fill text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
