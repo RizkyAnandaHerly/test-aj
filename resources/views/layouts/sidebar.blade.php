@@ -332,12 +332,11 @@
                 <i class="bi bi-speedometer2 nav-icon"></i> Dashboard
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
+            <a href="{{ route('warehouses.index') }}" class="sidebar-item {{ request()->routeIs('warehouses.*') ? 'active' : '' }}">
                 <i class="bi bi-building nav-icon"></i> Master Gudang
-                <span class="badge-soon">Soon</span>
             </a>
 
-            <a href="#" class="sidebar-item disabled-item">
+            <a href="{{ route('vendors.index') }}" class="sidebar-item {{ request()->routeIs('vendors.*') ? 'active' : '' }}">
                 <i class="bi bi-truck nav-icon"></i> Master Vendor
                 <span class="badge-soon">Soon</span>
             </a>
