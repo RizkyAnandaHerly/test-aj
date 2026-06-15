@@ -338,7 +338,6 @@
 
             <a href="{{ route('vendors.index') }}" class="sidebar-item {{ request()->routeIs('vendors.*') ? 'active' : '' }}">
                 <i class="bi bi-truck nav-icon"></i> Master Vendor
-                <span class="badge-soon">Soon</span>
             </a>
 
             <a href="{{ route('products.index') }}"

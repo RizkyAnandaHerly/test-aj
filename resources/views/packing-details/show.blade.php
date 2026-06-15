@@ -143,21 +143,30 @@
 @endsection
 
 @section('scripts')
-{{-- Library QR Code JS --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMQLkYBtcI7YMcCpcn+3xKspq424075DOHM13Ji5axruvQqgqm6xY5AW34VLDFqSLJi9vBmEXKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const trackingUrl = "{{ route('track', ['search' => $packingDetail->label_code]) }}";
+        // Pastikan container QR code benar-benar ada sebelum membuat QR
+        const qrContainer = document.getElementById("qrcode-container");
         
-        // Buat QR Code
-        new QRCode(document.getElementById("qrcode-container"), {
-            text: trackingUrl,
-            width: 140,
-            height: 140,
-            colorDark: "#1e293b",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        if (qrContainer) {
+            const trackingUrl = "{{ route('track', ['search' => $packingDetail->label_code]) }}";
+            
+            // Bersihkan container dulu (berjaga-jaga jika ter-render dua kali)
+            qrContainer.innerHTML = '';
+            
+            new QRCode(qrContainer, {
+                text: trackingUrl,
+                width: 140,
+                height: 140,
+                colorDark: "#1e293b",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } else {
+            console.error("Elemen dengan ID 'qrcode-container' tidak ditemukan.");
+        }
     });
 </script>
 @endsection
