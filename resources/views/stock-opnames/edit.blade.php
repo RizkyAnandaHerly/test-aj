@@ -25,6 +25,14 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 d-flex align-items-center gap-2" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill text-danger flex-shrink-0"></i>
+                    <span class="fw-semibold">{{ session('error') }}</span>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-header bg-white border-bottom-0 pt-4 pb-2 px-4 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
@@ -146,6 +154,9 @@
                                         <th class="text-center">Stok Sistem</th>
                                         <th class="text-center">Stok Fisik</th>
                                         <th class="text-center">Selisih</th>
+                                        @if($stockOpname->status === 'in_progress')
+                                            <th class="text-center" style="width:80px;">Aksi</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,6 +184,19 @@
                                                     <span class="badge bg-secondary">0</span>
                                                 @endif
                                             </td>
+                                            @if($stockOpname->status === 'in_progress')
+                                                <td class="text-center">
+                                                    <form action="{{ route('stock-opnames.destroy-detail', [$stockOpname->id, $detail->id]) }}"
+                                                          method="POST"
+                                                          onsubmit="return confirm('Yakin ingin menghapus detail perhitungan ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus detail">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

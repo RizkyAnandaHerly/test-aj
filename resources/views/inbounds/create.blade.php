@@ -1,5 +1,35 @@
 @extends('layouts.sidebar')
 @section('title', 'Input Inbound')
+
+@section('styles')
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    .ts-wrapper.form-select-lg .ts-control {
+        min-height: 48px !important;
+        padding: 0.5rem 1rem !important;
+        font-size: 1rem !important;
+    }
+    .ts-control {
+        border: 0 !important;
+        background-color: #f8fafc !important; /* match bg-light */
+        border-radius: 0.5rem !important;
+        box-shadow: none !important;
+    }
+    .ts-dropdown {
+        border-radius: 0.5rem !important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 0.25rem !important;
+    }
+    .ts-dropdown .active {
+        background-color: #3b82f6 !important;
+        color: white !important;
+        border-radius: 0.25rem !important;
+    }
+</style>
+@endsection
+
 @section('content')
 
     <div class="row justify-content-center">
@@ -168,6 +198,25 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <!-- Tom Select JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new TomSelect('#product_id', {
+            create: false,
+            placeholder: '-- Cari atau Pilih Produk --',
+            controlInput: '<input>'
+        });
+        new TomSelect('#vendor_id', {
+            create: false,
+            placeholder: '-- Pilih Vendor --',
+            controlInput: '<input>'
+        });
+    });
+    </script>
 
     {{-- Cascading Dropdown Script --}}
     <script>

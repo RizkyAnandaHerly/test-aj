@@ -60,8 +60,8 @@ class PackingDetailController extends Controller
                     }
                     
                     // PERBAIKAN: Cek agar jumlah packing tidak melebihi jumlah inbound
-                    if ($request->filled('quantity') && $request->input('quantity') > $inbound->quantity) {
-                        $validator->errors()->add('quantity', 'Jumlah packing tidak boleh melebihi jumlah inbound (' . $inbound->quantity . ').');
+                    if ($request->filled('quantity') && $request->input('quantity') > $inbound->qty) {
+                        $validator->errors()->add('quantity', 'Jumlah packing tidak boleh melebihi jumlah inbound (' . $inbound->qty . ').');
                     }
                 }
             }

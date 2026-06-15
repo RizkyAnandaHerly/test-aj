@@ -51,6 +51,7 @@
                                     <option value="" selected disabled>-- Pilih Penerimaan Barang --</option>
                                     @foreach($inbounds as $inb)
                                         <option value="{{ $inb->id }}"
+                                                data-product-id="{{ $inb->product_id }}"
                                             {{ old('inbound_id') == $inb->id ? 'selected' : '' }}>
                                             #{{ $inb->id }}
                                             — {{ $inb->product->sku ?? '—' }}
@@ -71,9 +72,10 @@
                                 </label>
                                 <select name="product_id"
                                         id="product_id"
-                                        class="form-select form-select-lg bg-light border-0 @error('product_id') is-invalid @enderror"
+                                        class="form-select form-select-lg border-0 @error('product_id') is-invalid @enderror"
+                                        style="pointer-events: none; background-color: #e9ecef;"
                                         required>
-                                    <option value="" selected disabled>-- Pilih Produk --</option>
+                                    <option value="" selected disabled>-- Produk Akan Terisi Otomatis --</option>
                                     @foreach($products as $p)
                                         <option value="{{ $p->id }}"
                                             {{ old('product_id') == $p->id ? 'selected' : '' }}>
@@ -248,13 +250,13 @@
         </div>
     </div>
 
-    {{-- ── Vanilla JS: Dynamic Parameter Rows ─────────────────────────────── --}}
+    {{-- ── Vanilla JS: Dynamic Parameter Rows & Product Automation ───────── --}}
     <script>
     (function () {
+        // --- Bagian Dinamis Baris Parameter (Kode Lama) ---
         const tbody    = document.getElementById('param-body');
         const addBtn   = document.getElementById('btn-add-row');
 
-        // ── Template for a new empty row ──────────────────────────────────────
         function newRow() {
             const tr = document.createElement('tr');
             tr.className = 'param-row';
@@ -290,7 +292,6 @@
             return tr;
         }
 
-        // ── Sync hapus button disabled state ─────────────────────────────────
         function syncHapusState() {
             const rows    = tbody.querySelectorAll('.param-row');
             const disable = rows.length <= 1;
@@ -301,15 +302,12 @@
             });
         }
 
-        // ── Add row ───────────────────────────────────────────────────────────
         addBtn.addEventListener('click', function () {
             tbody.appendChild(newRow());
             syncHapusState();
-            // Focus first input of new row
             tbody.lastElementChild.querySelector('input').focus();
         });
 
-        // ── Remove row (event delegation) ────────────────────────────────────
         tbody.addEventListener('click', function (e) {
             const btn = e.target.closest('.hapus-row');
             if (!btn || btn.disabled) return;
@@ -317,9 +315,28 @@
             syncHapusState();
         });
 
-        // ── Init on page load ─────────────────────────────────────────────────
         syncHapusState();
 
+        // --- PERBAIKAN: Bagian Otomasi Dropdown Produk (Kode Baru) ---
+        const inboundSelect = document.getElementById('inbound_id');
+        const productSelect = document.getElementById('product_id');
+
+        if (inboundSelect && productSelect) {
+            inboundSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const productId = selectedOption.getAttribute('data-product-id');
+
+                if (productId) {
+                    productSelect.value = productId;
+                } else {
+                    productSelect.value = '';
+                }
+            });
+
+            if(inboundSelect.value !== "") {
+                inboundSelect.dispatchEvent(new Event('change'));
+            }
+        }
     }());
     </script>
 
