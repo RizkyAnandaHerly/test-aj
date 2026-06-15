@@ -181,13 +181,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
+    // ── CRUD Barang khusus Admin & Staff ──────────────────────────────────
+    Route::middleware(['role:admin,staff'])->group(function () {
+        Route::resource('products', ProductController::class);
+    });
+    
     // ── Katalog Barang — semua role dapat melihat ─────────────────────────
     Route::resource('products', ProductController::class)->only(['index', 'show']);
 
-    // ── CRUD Barang khusus Admin & Staff ──────────────────────────────────
-    Route::middleware(['role:admin,staff'])->group(function () {
-        Route::resource('products', ProductController::class)->except(['index', 'show']);
-    });
 
     // ── Form Inbound (admin + staff) ──────────────────────────────────────
     Route::resource('inbounds', InboundController::class)->only(['index', 'create', 'store']);
