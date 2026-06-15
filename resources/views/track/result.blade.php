@@ -211,8 +211,8 @@
                                     </div>
                                     <p class="text-muted mb-1">Barang disimpan di 
                                         <strong>
-                                            @if($packingDetail->inbound->location)
-                                                Gudang {{ $packingDetail->inbound->location->warehouse->name ?? '-' }} · Zona {{ $packingDetail->inbound->location->zone ?? '-' }} · Rak {{ $packingDetail->inbound->location->rack_code ?? '-' }}
+                                            @if($packingDetail->product->productLocations->first()?->location)
+                                                Gudang {{ $packingDetail->product->productLocations->first()?->location->warehouse->name ?? '-' }} · Zona {{ $packingDetail->product->productLocations->first()?->location->zone ?? '-' }} · Rak {{ $packingDetail->product->productLocations->first()?->location->rack_code ?? '-' }}
                                             @else
                                                 Lokasi penyimpanan belum ditentukan
                                             @endif

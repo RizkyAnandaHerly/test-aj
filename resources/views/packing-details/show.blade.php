@@ -73,7 +73,7 @@
                         <div class="row g-4 align-items-center">
                             
                             {{-- Info Barang --}}
-                            <div class="col-md-8">
+                            <div class="col-md-8 no-print">
                                 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                                     <span class="text-muted small text-uppercase fw-bold">Traceability Label</span>
                                     <span class="badge bg-primary text-uppercase px-3 py-2 rounded-pill">{{ $packingDetail->label_code }}</span>
@@ -114,9 +114,9 @@
                             </div>
 
                             {{-- QR Code (Traceability Link) --}}
-                            <div class="col-md-4 text-center border-start-md ps-md-4">
+                            <div class="col-md-4 text-center ps-md-4">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
-                                    <div class="bg-white p-3 rounded-4 shadow-sm border mb-2 d-inline-block">
+                                    <div class="bg-white p-3 rounded-4 shadow-sm border mb-2 d-inline-block print-area">
                                         <div id="qrcode-container"></div>
                                     </div>
                                     <div class="text-muted small fw-bold text-uppercase mt-2">{{ $packingDetail->label_code }}</div>
