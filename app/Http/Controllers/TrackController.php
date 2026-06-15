@@ -25,7 +25,7 @@ class TrackController extends Controller
                     'packer',
                     'inbound.vendor',
                     'inbound.qcInspection.inspector',
-                    'inbound.location'
+                    'product.productLocations.location'
                 ])->where('label_code', $searchUpper)->first();
             } else {
                 $salesOrder = SalesOrder::where('order_number', $search)->first();
